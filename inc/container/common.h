@@ -15,10 +15,4 @@
 #define NR_ELEM(a) ((sizeof(a)) / (sizeof((a)[0])))
 #endif
 
-#ifdef _DEBUG
-#include <stdio.h>
-#define DPRINTF(...) fprintf(stdout, __VA_ARGS__)
-#else
-#define DPRINTF(...)
-#endif
 #endif /* __COMMON_H__ */

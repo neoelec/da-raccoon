@@ -41,8 +41,6 @@ void Heap_InitNrEntries(struct Heap *heap, size_t nr_ntries,
     heap->nr_entries = nr_ntries;
     heap->used = 0;
     heap->Compare = Compare;
-
-    DPRINTF("nr_entries : %zu\n", heap->nr_entries);
 }
 
 void Heap_Insert(struct Heap *heap, void *entry)
@@ -144,11 +142,6 @@ struct Heap *Heap_Resize(struct Heap *heap)
     size_t nr_entries_old = heap->nr_entries;
 
     heap = heap->used == nr_entries_old ? __expand(heap) : __shrink(heap);
-
-#ifdef _DEBUG
-    if (heap->nr_entries != nr_entries_old)
-        DPRINTF("nr_entries : %zu -> %zu\n", nr_entries_old, heap->nr_entries);
-#endif
 
     return heap;
 }

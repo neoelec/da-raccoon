@@ -19,33 +19,21 @@ void OHT_Init(struct OHT *table, size_t nr_buckets,
         table->bucket[i] = NULL;
 }
 
-static size_t __insert(struct OHT *table, void *entry)
+static void __insert(struct OHT *table, void *entry)
 {
     size_t addr, step_size;
     void **bucket = table->bucket;
 
     step_size = table->StepHash(table, entry);
     addr = table->KeyHash(table, entry);
-    while (bucket[addr] != NULL) {
-        DPRINTF("Collision occured! : vs. %p, Address(%zu)\n  -> ",
-            bucket[addr], addr);
+    while (bucket[addr] != NULL)
         addr = (addr + step_size) % table->nr_buckets;
-    }
 
     bucket[addr] = entry;
     table->used++;
-
-    return addr;
 }
 
-void OHT_Insert(struct OHT *table, void *entry)
-{
-    size_t addr = __insert(table, entry);
-
-    addr = addr;
-
-    DPRINTF("%p entered at address (%zu)\n", entry, addr);
-}
+void OHT_Insert(struct OHT *table, void *entry) { __insert(table, entry); }
 
 void OHT_Remove(struct OHT *table, void *entry)
 {

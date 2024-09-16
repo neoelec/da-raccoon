@@ -24,10 +24,6 @@ void CHT_Insert(struct CHT *table, struct DLL_Node *node)
     addr = table->KeyHash(table, node);
     head = &table->bucket[addr];
 
-    if (head != head->next)
-        DPRINTF("Collision occured! : at. %p, Address(%zu)\n  -> ", node, addr);
-
-    DPRINTF("%p entered at address (%zu)\n", node, addr);
     DLL_InsertTail(head, node);
 }
 

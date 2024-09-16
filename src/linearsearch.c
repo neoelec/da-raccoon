@@ -14,10 +14,8 @@ void *LinearSearch(const void *key, void **ptr_arr, size_t nmemb,
     for (i = 0; i < nmemb; i++) {
         void *v = ptr_arr[i];
 
-        if (!Compare(key, v)) {
-            DPRINTF("%zu번째에 검색 성공!\n", i);
+        if (!Compare(key, v))
             return v;
-        }
     }
 
     return NULL;
