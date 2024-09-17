@@ -58,9 +58,8 @@ static inline struct RBT_Node *__maximum(
     if (x == NiL)
         return NiL;
 
-    while (x->right != NiL) {
+    while (x->right != NiL)
         x = x->right;
-    }
 
     return (struct RBT_Node *)x;
 }
@@ -412,53 +411,54 @@ void RBT_Reverse(
     }
 }
 
-static void __forEachPreorder(struct RBT_Node *node,
+static void __forEachPreorder(struct RBT_Node *node, const struct RBT_Node *NiL,
     void (*Call)(struct RBT_Node *, void *), void *private)
 {
-    if (node == NULL)
+    if (node == NiL)
         return;
 
     Call(node, private);
-    __forEachPreorder(node->left, Call, private);
-    __forEachPreorder(node->right, Call, private);
+    __forEachPreorder(node->left, NiL, Call, private);
+    __forEachPreorder(node->right, NiL, Call, private);
 }
 
 void RBT_Preorder(
     struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private)
 {
-    __forEachPreorder(tree->root, Call, private);
+    __forEachPreorder(tree->root, tree->NiL, Call, private);
 }
 
-static void __forEachInorder(struct RBT_Node *node,
+static void __forEachInorder(struct RBT_Node *node, const struct RBT_Node *NiL,
     void (*Call)(struct RBT_Node *, void *), void *private)
 {
-    if (node == NULL)
+    if (node == NiL)
         return;
 
-    __forEachInorder(node->left, Call, private);
+    __forEachInorder(node->left, NiL, Call, private);
     Call(node, private);
-    __forEachInorder(node->right, Call, private);
+    __forEachInorder(node->right, NiL, Call, private);
 }
 
 void RBT_Inorder(
     struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private)
 {
-    __forEachInorder(tree->root, Call, private);
+    __forEachInorder(tree->root, tree->NiL, Call, private);
 }
 
 static void __forEachPostorder(struct RBT_Node *node,
-    void (*Call)(struct RBT_Node *, void *), void *private)
+    const struct RBT_Node *NiL, void (*Call)(struct RBT_Node *, void *),
+    void *private)
 {
-    if (node == NULL)
+    if (node == NiL)
         return;
 
-    __forEachPostorder(node->left, Call, private);
-    __forEachPostorder(node->right, Call, private);
+    __forEachPostorder(node->left, NiL, Call, private);
+    __forEachPostorder(node->right, NiL, Call, private);
     Call(node, private);
 }
 
 void RBT_Postorder(
     struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private)
 {
-    __forEachPostorder(tree->root, Call, private);
+    __forEachPostorder(tree->root, tree->NiL, Call, private);
 }
