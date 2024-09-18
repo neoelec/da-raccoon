@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-extern void *LinearSearch(const void *key, void *base, size_t nmemb,
+extern void *LinearSearch(const void *key, const void *base, size_t nmemb,
     size_t size, int (*Compare)(const void *, const void *));
 
 #ifdef __cplusplus
