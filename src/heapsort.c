@@ -5,16 +5,17 @@
 
 #include <algorithm/heapsort.h>
 
-static void __heapify(void **ptr_arr, size_t k, size_t r,
+#include "common.h"
+
+static void __heapify(void *base, size_t k, size_t r, size_t size,
     int (*Compare)(const void *, const void *))
 {
     size_t left = 2 * k + 1;
     size_t right = 2 * k + 2;
     size_t greater;
-    void *tmp;
 
     if (right <= r) {
-        if (Compare(ptr_arr[left], ptr_arr[right]) > 0)
+        if (COMPARE(Compare, base, left, right, size) > 0)
             greater = left;
         else
             greater = right;
@@ -23,35 +24,30 @@ static void __heapify(void **ptr_arr, size_t k, size_t r,
     else
         return;
 
-    if (Compare(ptr_arr[greater], ptr_arr[k]) > 0) {
-        tmp = ptr_arr[k];
-        ptr_arr[k] = ptr_arr[greater];
-        ptr_arr[greater] = tmp;
-        __heapify(ptr_arr, greater, r, Compare);
+    if (COMPARE(Compare, base, greater, k, size) > 0) {
+        b_swap(base, k, greater, size);
+        __heapify(base, greater, r, size, Compare);
     }
 }
 
-static inline void __buildHeap(
-    void **ptr_arr, size_t r, int (*Compare)(const void *, const void *))
+static inline void __buildHeap(void *base, size_t r, size_t size,
+    int (*Compare)(const void *, const void *))
 {
     ssize_t i;
 
     for (i = r / 2; i >= 0; i--)
-        __heapify(ptr_arr, i, r, Compare);
+        __heapify(base, i, r, size, Compare);
 }
 
-void HeapSort(
-    void **ptr_arr, size_t nmemb, int (*Compare)(const void *, const void *))
+void HeapSort(void *base, size_t nmemb, size_t size,
+    int (*Compare)(const void *, const void *))
 {
     size_t i;
-    void *tmp;
 
-    __buildHeap(ptr_arr, nmemb - 1, Compare);
+    __buildHeap(base, nmemb - 1, size, Compare);
 
     for (i = nmemb - 1; i >= 1; i--) {
-        tmp = ptr_arr[0];
-        ptr_arr[0] = ptr_arr[i];
-        ptr_arr[i] = tmp;
-        __heapify(ptr_arr, 0, i - 1, Compare);
+        b_swap(base, 0, i, size);
+        __heapify(base, 0, i - 1, size, Compare);
     }
 }
