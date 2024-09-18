@@ -2,44 +2,47 @@
 // Copyright (c) 2024 YOUNGJIN JOO (neoelec@gmail.com)
 
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 
-static void __merge(void **ptr_arr, int (*Compare)(const void *, const void *),
-    ssize_t start, ssize_t middle, ssize_t end)
+#include "common.h"
+
+static void __merge(void *base, size_t size,
+    int (*Compare)(const void *, const void *), ssize_t start, ssize_t middle,
+    ssize_t end)
 {
-    ssize_t i;
     ssize_t left = start;
     ssize_t right = middle + 1;
     ssize_t idx = 0;
 
-    void **dest = malloc(sizeof(void *) * (end - start + 1));
+    void *dest = malloc((end - start + 1) * size);
 
     while (left <= middle && right <= end) {
-        if (Compare(ptr_arr[left], ptr_arr[right]) < 0) {
-            dest[idx] = ptr_arr[left];
+        if (COMPARE(Compare, base, left, right, size) < 0) {
+            memcpy(dest + idx * size, base + left * size, size);
             left++;
         } else {
-            dest[idx] = ptr_arr[right];
+            memcpy(dest + idx * size, base + right * size, size);
             right++;
         }
 
         idx++;
     }
 
-    while (left <= middle)
-        dest[idx++] = ptr_arr[left++];
+    if (left <= middle)
+        memcpy(
+            dest + idx * size, base + left * size, (middle - left + 1) * size);
 
-    while (right <= end)
-        dest[idx++] = ptr_arr[right++];
+    if (right <= end)
+        memcpy(
+            dest + idx * size, base + right * size, (end - right + 1) * size);
 
-    idx = 0;
-    for (i = start; i <= end; i++)
-        ptr_arr[i] = dest[idx++];
+    memcpy(base + start * size, dest, (end - start + 1) * size);
 
     free(dest);
 }
 
-static void __mergeSort(void **ptr_arr,
+static void __mergeSort(void *base, size_t size,
     int (*Compare)(const void *, const void *), ssize_t start, ssize_t end)
 {
     ssize_t middle;
@@ -49,14 +52,14 @@ static void __mergeSort(void **ptr_arr,
 
     middle = (start + end) / 2;
 
-    __mergeSort(ptr_arr, Compare, start, middle);
-    __mergeSort(ptr_arr, Compare, middle + 1, end);
+    __mergeSort(base, size, Compare, start, middle);
+    __mergeSort(base, size, Compare, middle + 1, end);
 
-    __merge(ptr_arr, Compare, start, middle, end);
+    __merge(base, size, Compare, start, middle, end);
 }
 
-void MergeSort(
-    void **ptr_arr, size_t nmemb, int (*Compare)(const void *, const void *))
+void MergeSort(void *base, size_t nmemb, size_t size,
+    int (*Compare)(const void *, const void *))
 {
-    __mergeSort(ptr_arr, Compare, 0, nmemb - 1);
+    __mergeSort(base, size, Compare, 0, nmemb - 1);
 }
