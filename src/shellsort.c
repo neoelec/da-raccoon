@@ -8,37 +8,32 @@
 
 #include <algorithm/shellsort.h>
 
-static inline void __intervalSort(void *base, size_t size, ssize_t begin,
+static inline void __intervalSort(uint8_t *base, size_t size, ssize_t begin,
     ssize_t end, ssize_t intv, int (*Compare)(const void *, const void *))
 {
     ssize_t i;
-    uint8_t *new_item, *tmp_dynamic = NULL, tmp_static[16];
-
-    if (size > sizeof(tmp_static)) {
-        tmp_dynamic = malloc(size);
-        new_item = tmp_dynamic;
-    } else
-        new_item = tmp_static;
+    uint8_t tmp_static[16];
+    uint8_t *new_item = (size > sizeof(tmp_static)) ? malloc(size) : tmp_static;
 
     for (i = begin + intv; i <= end; i = i + intv) {
         ssize_t j;
 
-        memcpy(new_item, base + i * size, size);
+        memcpy(new_item, &base[i * size], size);
 
         j = i - intv;
         while (j >= begin) {
-            if (Compare(new_item, base + j * size) >= 0)
+            if (Compare(new_item, &base[j * size]) >= 0)
                 break;
 
-            memcpy(base + (j + intv) * size, base + j * size, size);
+            memcpy(&base[(j + intv) * size], &base[j * size], size);
             j -= intv;
         }
 
-        memcpy(base + (j + intv) * size, new_item, size);
+        memcpy(&base[(j + intv) * size], new_item, size);
     }
 
-    if (tmp_dynamic)
-        free(tmp_dynamic);
+    if (size > sizeof(tmp_static))
+        free(new_item);
 }
 
 void ShellSort(void *base, size_t nmemb, size_t size,
