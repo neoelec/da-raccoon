@@ -8,31 +8,32 @@
 
 #include <algorithm/insertionsort.h>
 
-void InsertionSort(void *base, size_t nmemb, size_t size,
+static inline void __insertionSort(uint8_t *base, size_t nmemb, size_t size,
     int (*Compare)(const void *, const void *))
 {
     size_t i;
-    uint8_t *new_item, *tmp_dynamic = NULL, tmp_static[16];
-
-    if (size > sizeof(tmp_static)) {
-        tmp_dynamic = malloc(size);
-        new_item = tmp_dynamic;
-    } else
-        new_item = tmp_static;
+    uint8_t tmp_static[16];
+    uint8_t *new_item = (size > sizeof(tmp_static)) ? malloc(size) : tmp_static;
 
     for (i = 1; i < nmemb; i++) {
         ssize_t loc = i - 1;
 
-        memcpy(new_item, base + i * size, size);
+        memcpy(new_item, &base[i * size], size);
 
         while (loc >= 0 && (Compare(new_item, base + loc * size) < 0)) {
-            memcpy(base + (loc + 1) * size, base + loc * size, size);
+            memcpy(&base[(loc + 1) * size], &base[loc * size], size);
             loc--;
         }
 
         memcpy(base + (loc + 1) * size, new_item, size);
     }
 
-    if (tmp_dynamic)
-        free(tmp_dynamic);
+    if (size > sizeof(tmp_static))
+        free(new_item);
+}
+
+void InsertionSort(void *base, size_t nmemb, size_t size,
+    int (*Compare)(const void *, const void *))
+{
+    __insertionSort((uint8_t *)base, nmemb, size, Compare);
 }
