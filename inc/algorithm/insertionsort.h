@@ -13,8 +13,8 @@
 extern "C" {
 #endif
 
-extern void InsertionSort(
-    void **ptr_arr, size_t nmemb, int (*Compare)(const void *, const void *));
+extern void InsertionSort(void *base, size_t nmemb, size_t size,
+    int (*Compare)(const void *, const void *));
 
 #ifdef __cplusplus
 }
