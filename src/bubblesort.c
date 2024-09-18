@@ -3,8 +3,10 @@
 
 #include <algorithm/bubblesort.h>
 
-void BubbleSort(
-    void **ptr_arr, size_t nmemb, int (*Compare)(const void *, const void *))
+#include "common.h"
+
+void BubbleSort(void *base, size_t nmemb, size_t size,
+    int (*Compare)(const void *, const void *))
 {
     size_t i;
 
@@ -12,11 +14,8 @@ void BubbleSort(
         size_t j;
 
         for (j = 0; j < nmemb - (i + 1); j++) {
-            if (Compare(ptr_arr[j], ptr_arr[j + 1]) > 0) {
-                void *tmp = ptr_arr[j];
-                ptr_arr[j] = ptr_arr[j + 1];
-                ptr_arr[j + 1] = tmp;
-            }
+            if (COMPARE(Compare, base, j, j + 1, size) > 0)
+                b_swap(base, j, j + 1, size);
         }
     }
 }
