@@ -6,7 +6,7 @@
 
 #include <algorithm/binarysearch.h>
 
-void *BinarySearch(const void *key, void **ptr_arr, size_t nmemb,
+void *BinarySearch(const void *key, void *base, size_t nmemb, size_t size,
     int (*Compare)(const void *, const void *))
 {
     ssize_t left, right;
@@ -16,10 +16,10 @@ void *BinarySearch(const void *key, void **ptr_arr, size_t nmemb,
 
     while (left <= right) {
         ssize_t mid = (left + right) / 2;
-        int diff = Compare(key, ptr_arr[mid]);
+        int diff = Compare(key, base + mid * size);
 
         if (diff == 0)
-            return ptr_arr[mid];
+            return base + mid * size;
         else if (diff > 0)
             left = mid + 1;
         else
