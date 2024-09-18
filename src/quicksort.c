@@ -4,49 +4,46 @@
 #include <string.h>
 #include <sys/types.h>
 
-static inline ssize_t __partition(void **ptr_arr,
+#include "common.h"
+
+static inline ssize_t __partition(void *base, size_t size,
     int (*Compare)(const void *, const void *), ssize_t left, ssize_t right)
 {
     ssize_t first = left;
-    void *pivot = ptr_arr[first];
-    void *tmp;
+    void *pivot = base + first * size;
 
     ++left;
     while (left <= right) {
-        while ((Compare(ptr_arr[left], pivot) <= 0) && (left < right))
+        while ((Compare(base + left * size, pivot) <= 0) && (left < right))
             ++left;
 
-        while ((Compare(ptr_arr[right], pivot) > 0) && (left <= right))
+        while ((Compare(base + right * size, pivot) > 0) && (left <= right))
             --right;
 
-        if (left < right) {
-            tmp = ptr_arr[left];
-            ptr_arr[left] = ptr_arr[right];
-            ptr_arr[right] = tmp;
-        } else
+        if (left < right)
+            b_swap(base, left, right, size);
+        else
             break;
     }
 
-    tmp = ptr_arr[first];
-    ptr_arr[first] = ptr_arr[right];
-    ptr_arr[right] = tmp;
+    b_swap(base, first, right, size);
 
     return right;
 }
 
-static void __quickSort(void **ptr_arr,
+static void __quickSort(void *base, size_t size,
     int (*Compare)(const void *, const void *), ssize_t left, ssize_t right)
 {
     if (left < right) {
-        ssize_t index = __partition(ptr_arr, Compare, left, right);
+        ssize_t index = __partition(base, size, Compare, left, right);
 
-        __quickSort(ptr_arr, Compare, left, index - 1);
-        __quickSort(ptr_arr, Compare, index + 1, right);
+        __quickSort(base, size, Compare, left, index - 1);
+        __quickSort(base, size, Compare, index + 1, right);
     }
 }
 
-void QuickSort(
-    void **ptr_arr, size_t nmemb, int (*Compare)(const void *, const void *))
+void QuickSort(void *base, size_t nmemb, size_t size,
+    int (*Compare)(const void *, const void *))
 {
-    __quickSort(ptr_arr, Compare, 0, nmemb - 1);
+    __quickSort(base, size, Compare, 0, nmemb - 1);
 }
