@@ -63,7 +63,7 @@ void DLL_Forward(struct DLL_Node *head, void (*Call)(struct DLL_Node *, void *),
     }
 }
 
-void DLL_Reverse(struct DLL_Node *head, void (*Call)(struct DLL_Node *, void *),
+void DLL_Backward(struct DLL_Node *head, void (*Call)(struct DLL_Node *, void *),
     void *private)
 {
     struct DLL_Node *node = head->prev;

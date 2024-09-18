@@ -67,12 +67,12 @@ void CDLL_Forward(
     DLL_Remove(&tmp_head);
 }
 
-void CDLL_Reverse(
+void CDLL_Backward(
     struct CDLL *list, void (*Call)(struct DLL_Node *, void *), void *private)
 {
     struct DLL_Node tmp_head;
 
     DLL_InsertBefore(list->head, &tmp_head);
-    DLL_Reverse(&tmp_head, Call, private);
+    DLL_Backward(&tmp_head, Call, private);
     DLL_Remove(&tmp_head);
 }

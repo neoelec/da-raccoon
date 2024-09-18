@@ -27,7 +27,7 @@ extern size_t DLL_Count(const struct DLL_Node *head);
 extern struct DLL_Node *DLL_GetNode(const struct DLL_Node *head, ssize_t n);
 extern void DLL_Forward(struct DLL_Node *head,
     void (*Call)(struct DLL_Node *, void *), void *private);
-extern void DLL_Reverse(struct DLL_Node *head,
+extern void DLL_Backward(struct DLL_Node *head,
     void (*Call)(struct DLL_Node *, void *), void *private);
 
 #ifdef __cplusplus

@@ -399,7 +399,7 @@ void RBT_Forward(
     }
 }
 
-void RBT_Reverse(
+void RBT_Backward(
     struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private)
 {
     struct RBT_Node *NiL = tree->NiL;

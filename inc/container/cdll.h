@@ -24,7 +24,7 @@ extern size_t CDLL_Count(const struct CDLL *list);
 extern struct DLL_Node *CDLL_GetNode(const struct CDLL *list, ssize_t n);
 extern void CDLL_Forward(
     struct CDLL *list, void (*Call)(struct DLL_Node *, void *), void *private);
-extern void CDLL_Reverse(
+extern void CDLL_Backward(
     struct CDLL *list, void (*Call)(struct DLL_Node *, void *), void *private);
 
 #ifdef __cplusplus

@@ -36,7 +36,7 @@ extern void AVL_Insert(struct AVL *tree, struct AVL_Node *node);
 extern void AVL_Remove(struct AVL *tree, struct AVL_Node *node);
 extern void AVL_Forward(
     struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private);
-extern void AVL_Reverse(
+extern void AVL_Backward(
     struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private);
 extern void AVL_Preorder(
     struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private);

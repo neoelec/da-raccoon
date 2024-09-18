@@ -39,7 +39,7 @@ extern void RBT_Insert(struct RBT *tree, struct RBT_Node *node);
 extern void RBT_Remove(struct RBT *tree, struct RBT_Node *node);
 extern void RBT_Forward(
     struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private);
-extern void RBT_Reverse(
+extern void RBT_Backward(
     struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private);
 extern void RBT_Preorder(
     struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private);

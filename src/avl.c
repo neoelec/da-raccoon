@@ -336,7 +336,7 @@ void AVL_Forward(
     }
 }
 
-void AVL_Reverse(
+void AVL_Backward(
     struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private)
 {
     struct AVL_Node *x = __maximum(tree->root);
