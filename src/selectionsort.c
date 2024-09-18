@@ -3,24 +3,22 @@
 
 #include <algorithm/selectionsort.h>
 
-void SelectionSort(
-    void **ptr_arr, size_t nmemb, int (*Compare)(const void *, const void *))
+#include "common.h"
+
+void SelectionSort(void *base, size_t nmemb, size_t size,
+    int (*Compare)(const void *, const void *))
 {
     size_t i;
 
     for (i = 0; i < nmemb - 1; i++) {
         size_t j;
         size_t min = i;
-        void *tmp;
 
         for (j = i + 1; j < nmemb; j++) {
-            int diff = Compare(ptr_arr[j], ptr_arr[min]);
-            if (diff < 0)
+            if (COMPARE(Compare, base, j, min, size) < 0)
                 min = j;
         }
 
-        tmp = ptr_arr[i];
-        ptr_arr[i] = ptr_arr[min];
-        ptr_arr[min] = tmp;
+        b_swap(base, i, min, size);
     }
 }
