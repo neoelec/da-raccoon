@@ -10,7 +10,7 @@ static inline size_t __count(const struct CQ *queue)
     if (queue->front <= queue->rear)
         return queue->rear - queue->front;
     else
-        return queue->rear + (queue->nr_entries - queue->front) + 1;
+        return queue->rear + queue->nr_entries - queue->front;
 }
 
 static inline bool __isEmpty(const struct CQ *queue)
@@ -20,7 +20,7 @@ static inline bool __isEmpty(const struct CQ *queue)
 
 static inline bool __isFull(const struct CQ *queue)
 {
-    return __count(queue) == queue->nr_entries;
+    return (queue->rear + 1) % queue->nr_entries == queue->front;
 }
 
 void CQ_Init(struct CQ *queue, size_t nr_entries)
@@ -32,34 +32,26 @@ void CQ_Init(struct CQ *queue, size_t nr_entries)
 
 int CQ_Enqueue(struct CQ *queue, void *entry)
 {
-    size_t pos;
-
     if (__isFull(queue))
         return -EIO;
 
-    if (queue->rear == queue->nr_entries)
-        pos = queue->rear = 0;
-    else
-        pos = queue->rear++;
-
-    queue->entry[pos] = entry;
+    queue->entry[queue->rear] = entry;
+    queue->rear = (queue->rear + 1) % queue->nr_entries;
 
     return 0;
 }
 
 void *CQ_Dequeue(struct CQ *queue)
 {
-    size_t pos;
+    void *entry;
 
     if (__isEmpty(queue))
         return NULL;
 
-    if (queue->front == queue->nr_entries)
-        pos = queue->front = 0;
-    else
-        pos = queue->front++;
+    entry = queue->entry[queue->front];
+    queue->front = (queue->front + 1) % queue->nr_entries;
 
-    return queue->entry[pos];
+    return entry;
 }
 
 size_t CQ_Count(const struct CQ *queue) { return __count(queue); }
