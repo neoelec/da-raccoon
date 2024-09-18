@@ -1,37 +1,48 @@
 // SPDX-License-Identifier: GPL-2.0+
 // Copyright (c) 2024 YOUNGJIN JOO (neoelec@gmail.com)
 
-#include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 
 #include <algorithm/shellsort.h>
 
-static inline void __intervalSort(void **ptr_arr, ssize_t begin, ssize_t end,
-    ssize_t intv, int (*Compare)(const void *, const void *))
+static inline void __intervalSort(void *base, size_t size, ssize_t begin,
+    ssize_t end, ssize_t intv, int (*Compare)(const void *, const void *))
 {
     ssize_t i;
+    uint8_t *new_item, *tmp_dynamic = NULL, tmp_static[16];
+
+    if (size > sizeof(tmp_static)) {
+        tmp_dynamic = malloc(size);
+        new_item = tmp_dynamic;
+    } else
+        new_item = tmp_static;
 
     for (i = begin + intv; i <= end; i = i + intv) {
         ssize_t j;
-        void *item = ptr_arr[i];
+
+        memcpy(new_item, base + i * size, size);
 
         j = i - intv;
         while (j >= begin) {
-            int diff = Compare(item, ptr_arr[j]);
-            if (diff >= 0)
+            if (Compare(new_item, base + j * size) >= 0)
                 break;
 
-            ptr_arr[j + intv] = ptr_arr[j];
+            memcpy(base + (j + intv) * size, base + j * size, size);
             j -= intv;
         }
 
-        ptr_arr[j + intv] = item;
+        memcpy(base + (j + intv) * size, new_item, size);
     }
+
+    if (tmp_dynamic)
+        free(tmp_dynamic);
 }
 
-void ShellSort(
-    void **ptr_arr, size_t nmemb, int (*Compare)(const void *, const void *))
+void ShellSort(void *base, size_t nmemb, size_t size,
+    int (*Compare)(const void *, const void *))
 {
     size_t intv;
     size_t i;
@@ -39,7 +50,7 @@ void ShellSort(
     intv = nmemb / 2;
     while (intv >= 1) {
         for (i = 0; i < intv; i++)
-            __intervalSort(ptr_arr, i, nmemb - 1, intv, Compare);
+            __intervalSort(base, size, i, nmemb - 1, intv, Compare);
 
         intv /= 2;
     }
