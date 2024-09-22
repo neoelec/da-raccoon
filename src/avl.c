@@ -347,15 +347,15 @@ void AVL_Backward(
     }
 }
 
-static void __forEachPreorder(struct AVL_Node *node,
-    void (*Call)(struct AVL_Node *, void *), void *private)
+static void __forEachPreorder(
+    struct AVL_Node *x, void (*Call)(struct AVL_Node *, void *), void *private)
 {
-    if (node == NULL)
+    if (x == NULL)
         return;
 
-    Call(node, private);
-    __forEachPreorder(node->left, Call, private);
-    __forEachPreorder(node->right, Call, private);
+    Call(x, private);
+    __forEachPreorder(x->left, Call, private);
+    __forEachPreorder(x->right, Call, private);
 }
 
 void AVL_Preorder(
@@ -364,15 +364,15 @@ void AVL_Preorder(
     __forEachPreorder(tree->root, Call, private);
 }
 
-static void __forEachInorder(struct AVL_Node *node,
-    void (*Call)(struct AVL_Node *, void *), void *private)
+static void __forEachInorder(
+    struct AVL_Node *x, void (*Call)(struct AVL_Node *, void *), void *private)
 {
-    if (node == NULL)
+    if (x == NULL)
         return;
 
-    __forEachInorder(node->left, Call, private);
-    Call(node, private);
-    __forEachInorder(node->right, Call, private);
+    __forEachInorder(x->left, Call, private);
+    Call(x, private);
+    __forEachInorder(x->right, Call, private);
 }
 
 void AVL_Inorder(
@@ -381,15 +381,15 @@ void AVL_Inorder(
     __forEachInorder(tree->root, Call, private);
 }
 
-static void __forEachPostorder(struct AVL_Node *node,
-    void (*Call)(struct AVL_Node *, void *), void *private)
+static void __forEachPostorder(
+    struct AVL_Node *x, void (*Call)(struct AVL_Node *, void *), void *private)
 {
-    if (node == NULL)
+    if (x == NULL)
         return;
 
-    __forEachPostorder(node->left, Call, private);
-    __forEachPostorder(node->right, Call, private);
-    Call(node, private);
+    __forEachPostorder(x->left, Call, private);
+    __forEachPostorder(x->right, Call, private);
+    Call(x, private);
 }
 
 void AVL_Postorder(
