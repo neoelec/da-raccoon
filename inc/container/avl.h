@@ -5,6 +5,7 @@
 #ifndef __AVL_H__
 #define __AVL_H__
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <sys/types.h>
 
@@ -28,12 +29,13 @@ extern "C" {
 
 extern void AVL_Init(struct AVL *tree,
     int (*Compare)(const struct AVL_Node *, const struct AVL_Node *));
-extern struct AVL_Node *AVL_Minimum(const struct AVL *root);
-extern struct AVL_Node *AVL_Maximum(const struct AVL *root);
+extern bool AVL_IsEmpty(const struct AVL *tree);
+extern struct AVL_Node *AVL_Minimum(const struct AVL *tree);
+extern struct AVL_Node *AVL_Maximum(const struct AVL *tree);
 extern struct AVL_Node *AVL_Search(
-    const struct AVL *tree, const struct AVL_Node *key_node);
-extern void AVL_Insert(struct AVL *tree, struct AVL_Node *node);
-extern void AVL_Remove(struct AVL *tree, struct AVL_Node *node);
+    const struct AVL *tree, const struct AVL_Node *k);
+extern void AVL_Insert(struct AVL *tree, struct AVL_Node *x);
+extern void AVL_Remove(struct AVL *tree, struct AVL_Node *x);
 extern void AVL_Forward(
     struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private);
 extern void AVL_Backward(

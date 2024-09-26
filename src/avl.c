@@ -1,25 +1,13 @@
 // SPDX-License-Identifier: GPL-2.0+
 // Copyright (c) 2024 YOUNGJIN JOO (neoelec@gmail.com)
 
-#include <stdbool.h>
 #include <stdlib.h>
 
 #include <container/avl.h>
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
-static inline bool __isEmpty(struct AVL_Node *x)
-{
-    return x->parent == x ? true : false;
-}
-
-static inline void __initNode(struct AVL_Node *x)
-{
-    x->parent = x;
-    x->left = NULL;
-    x->right = NULL;
-    x->height = 0;
-}
+#define __compare(tree, a, b) (tree)->Compare(a, b)
 
 void AVL_Init(struct AVL *tree,
     int (*Compare)(const struct AVL_Node *, const struct AVL_Node *))
@@ -28,35 +16,89 @@ void AVL_Init(struct AVL *tree,
     tree->Compare = Compare;
 }
 
-static inline void __setParent(struct AVL_Node *x)
+static inline bool __isEmpty(const struct AVL *tree)
 {
-    if (x == NULL)
-        return;
-
-    if (x->left)
-        x->left->parent = x;
-
-    if (x->right)
-        x->right->parent = x;
+    return (tree->root == NULL) ? true : false;
 }
 
-static inline ssize_t __height(struct AVL_Node *x)
-{
-    if (x == NULL)
-        return 0;
+bool AVL_IsEmpty(const struct AVL *tree) { return __isEmpty(tree); }
 
-    return x->height;
+static inline struct AVL_Node *__minimum(const struct AVL_Node *x)
+{
+    while (x->left != NULL)
+        x = x->left;
+
+    return (struct AVL_Node *)x;
 }
+
+struct AVL_Node *AVL_Minimum(const struct AVL *tree)
+{
+    if (__isEmpty(tree))
+        return NULL;
+
+    return __minimum(tree->root);
+}
+
+static inline struct AVL_Node *__maximum(const struct AVL_Node *x)
+{
+    while (x->right != NULL)
+        x = x->right;
+
+    return (struct AVL_Node *)x;
+}
+
+struct AVL_Node *AVL_Maximum(const struct AVL *tree)
+{
+    if (__isEmpty(tree))
+        return NULL;
+
+    return __maximum(tree->root);
+}
+
+static inline struct AVL_Node *__search(
+    const struct AVL *tree, const struct AVL_Node *x, const struct AVL_Node *k)
+{
+    while (x != NULL) {
+        int diff = __compare(tree, k, x);
+        if (diff == 0)
+            break;
+
+        x = diff < 0 ? x->left : x->right;
+    }
+
+    return (struct AVL_Node *)x;
+}
+
+struct AVL_Node *AVL_Search(const struct AVL *tree, const struct AVL_Node *k)
+{
+    return __search(tree, tree->root, k);
+}
+
+static inline void __setLeftChild(struct AVL_Node *x, struct AVL_Node *c)
+{
+    x->left = c;
+
+    if (c != NULL)
+        c->parent = x;
+}
+
+static inline void __setRightChild(struct AVL_Node *x, struct AVL_Node *c)
+{
+    x->right = c;
+
+    if (c != NULL)
+        c->parent = x;
+}
+
+static inline ssize_t __height(struct AVL_Node *x) { return x ? x->height : 0; }
 
 static inline struct AVL_Node *__rotateLeft(struct AVL_Node *x)
 {
     struct AVL_Node *y = x->right;
     struct AVL_Node *t2 = y->left;
 
-    y->left = x;
-    __setParent(y);
-    x->right = t2;
-    __setParent(x);
+    __setLeftChild(y, x);
+    __setRightChild(x, t2);
 
     x->height = max(__height(x->left), __height(x->right)) + 1;
     y->height = max(__height(y->left), __height(y->right)) + 1;
@@ -69,10 +111,8 @@ static inline struct AVL_Node *__rotateRight(struct AVL_Node *y)
     struct AVL_Node *x = y->left;
     struct AVL_Node *t2 = x->right;
 
-    x->right = y;
-    __setParent(x);
-    y->left = t2;
-    __setParent(y);
+    __setRightChild(x, y);
+    __setLeftChild(y, t2);
 
     y->height = max(__height(y->left), __height(y->right)) + 1;
     x->height = max(__height(x->left), __height(x->right)) + 1;
@@ -82,141 +122,85 @@ static inline struct AVL_Node *__rotateRight(struct AVL_Node *y)
 
 static inline ssize_t __balanceFactor(struct AVL_Node *x)
 {
-    if (x == NULL)
-        return 0;
-
-    return __height(x->left) - __height(x->right);
+    return x ? __height(x->left) - __height(x->right) : 0;
 }
 
-static inline struct AVL_Node *__minimum(const struct AVL_Node *x)
-{
-    if (x == NULL)
-        return NULL;
-
-    while (x->left != NULL)
-        x = x->left;
-
-    return (struct AVL_Node *)x;
-}
-
-static inline struct AVL_Node *__maximum(const struct AVL_Node *x)
-{
-    if (x == NULL)
-        return NULL;
-
-    while (x->right != NULL)
-        x = x->right;
-
-    return (struct AVL_Node *)x;
-}
-
-static struct AVL_Node *__insert(struct AVL_Node *x, struct AVL_Node *z,
-    int (*Compare)(const struct AVL_Node *, const struct AVL_Node *))
+static struct AVL_Node *__rebalanceInsert(
+    struct AVL *tree, struct AVL_Node *x, struct AVL_Node *z)
 {
     ssize_t bf;
-
-    __initNode(z);
-
-    if (x == NULL) {
-        x = z;
-    } else if (Compare(z, x) < 0) {
-        x->left = __insert(x->left, z, Compare);
-        __setParent(x);
-    } else if (Compare(z, x) > 0) {
-        x->right = __insert(x->right, z, Compare);
-        __setParent(x);
-    } else {
-        return x;
-    }
 
     x->height = max(__height(x->left), __height(x->right)) + 1;
 
     bf = __balanceFactor(x);
-    if (bf > 1 && Compare(z, x->left) < 0) { // left left case
+    if (bf > 1 && __compare(tree, z, x->left) < 0) { // left left case
         return __rotateRight(x);
-    } else if (bf < -1 && Compare(z, x->right) > 0) { // right right case
+    } else if (bf < -1
+        && __compare(tree, z, x->right) > 0) { // right right case
         return __rotateLeft(x);
-    } else if (bf > 1 && Compare(z, x->left) > 0) { // left right case
-        x->left = __rotateLeft(x->left);
-        __setParent(x);
+    } else if (bf > 1 && __compare(tree, z, x->left) > 0) { // left right case
+        __setLeftChild(x, __rotateLeft(x->left));
         return __rotateRight(x);
-    } else if (bf < -1 && Compare(z, x->right) < 0) { // right left case
-        x->right = __rotateRight(x->right);
-        __setParent(x);
+    } else if (bf < -1 && __compare(tree, z, x->right) < 0) { // right left case
+        __setRightChild(x, __rotateRight(x->right));
         return __rotateLeft(x);
     }
 
     return x;
 }
 
+static struct AVL_Node *__insert(
+    struct AVL *tree, struct AVL_Node *x, struct AVL_Node *z)
+{
+    if (x == NULL)
+        return z;
+    else if (__compare(tree, z, x) < 0)
+        __setLeftChild(x, __insert(tree, x->left, z));
+    else if (__compare(tree, z, x) > 0)
+        __setRightChild(x, __insert(tree, x->right, z));
+    else
+        return x;
+
+    return __rebalanceInsert(tree, x, z);
+}
+
 void AVL_Insert(struct AVL *tree, struct AVL_Node *z)
 {
-    tree->root = __insert(tree->root, z, tree->Compare);
+    z->left = NULL;
+    z->right = NULL;
+    z->height = 0;
+
+    tree->root = __insert(tree, tree->root, z);
 
     if (tree->root != NULL)
         tree->root->parent = NULL;
 }
 
-static inline struct AVL_Node *__replaceNode(
+static inline struct AVL_Node *__exchange(
     const struct AVL_Node *a, struct AVL_Node *b)
 {
-    struct AVL_Node *parent;
+    __setLeftChild(b, a->left);
+    __setRightChild(b, a->right);
 
-    b->parent = parent = a->parent;
-    b->left = a->left;
-    b->right = a->right;
     b->height = a->height;
-    __setParent(b);
+    b->parent = a->parent;
 
-    if (parent) {
-        if (parent->right == a)
-            parent->right = b;
-        else
-            parent->left = b;
-    }
+    if (a->parent == NULL)
+        return b;
+    else if (a->parent->left == a)
+        a->parent->left = b;
+    else
+        a->parent->right = b;
 
     return b;
 }
 
-struct AVL_Node *__remove(struct AVL_Node *x, struct AVL_Node *d,
-    int (*Compare)(const struct AVL_Node *, const struct AVL_Node *))
+static struct AVL_Node *__rebalanceRemove(struct AVL *tree, struct AVL_Node *x)
 {
     ssize_t bf;
 
     if (x == NULL)
         return NULL;
-
-    if (Compare(d, x) < 0) {
-        x->left = __remove(x->left, d, Compare);
-        __setParent(x);
-    } else if (Compare(d, x) > 0) {
-        x->right = __remove(x->right, d, Compare);
-        __setParent(x);
-    } else {
-        if ((x->left == NULL) || (x->right == NULL)) {
-            struct AVL_Node *temp = NULL;
-
-            if (temp == x->left)
-                temp = x->right;
-            else
-                temp = x->left;
-
-            if (temp == NULL) {
-                temp = x;
-                x = NULL;
-            } else {
-                x = temp;
-            }
-        } else {
-            struct AVL_Node *temp = __minimum(x->right);
-
-            x->right = __remove(x->right, temp, Compare);
-            x = __replaceNode(x, temp);
-        }
-    }
-
-    if (x == NULL)
-        return x;
 
     x->height = max(__height(x->left), __height(x->right)) + 1;
 
@@ -224,65 +208,56 @@ struct AVL_Node *__remove(struct AVL_Node *x, struct AVL_Node *d,
     if (bf > 1 && __balanceFactor(x->left) >= 0) {
         return __rotateRight(x);
     } else if (bf > 1 && __balanceFactor(x->left) < 0) {
-        x->left = __rotateLeft(x->left);
-        __setParent(x);
+        __setLeftChild(x, __rotateLeft(x->left));
         return __rotateRight(x);
     } else if (bf < -1 && __balanceFactor(x->right) <= 0) {
         return __rotateLeft(x);
     } else if (bf < -1 && __balanceFactor(x->right) > 0) {
-        x->right = __rotateRight(x->right);
-        __setParent(x);
+        __setRightChild(x, __rotateRight(x->right));
         return __rotateLeft(x);
     }
 
     return x;
 }
 
-void AVL_Remove(struct AVL *tree, struct AVL_Node *d)
+struct AVL_Node *__remove(
+    struct AVL *tree, struct AVL_Node *x, struct AVL_Node *z)
 {
-    tree->root = __remove(tree->root, d, tree->Compare);
+    struct AVL_Node *y;
+
+    if (__compare(tree, z, x) < 0) {
+        __setLeftChild(x, __remove(tree, x->left, z));
+    } else if (__compare(tree, z, x) > 0) {
+        __setRightChild(x, __remove(tree, x->right, z));
+    } else {
+        if (x->left == NULL) {
+            x = NULL;
+        } else if (x->right == NULL) {
+            x = x->left;
+        } else {
+            y = __minimum(x->right);
+            x->right = __remove(tree, x->right, y);
+            x = __exchange(x, y);
+        }
+    }
+
+    return __rebalanceRemove(tree, x);
+}
+
+void AVL_Remove(struct AVL *tree, struct AVL_Node *z)
+{
+    if (__isEmpty(tree))
+        return;
+
+    tree->root = __remove(tree, tree->root, z);
 
     if (tree->root != NULL)
         tree->root->parent = NULL;
 }
 
-struct AVL_Node *AVL_Minimum(const struct AVL *tree)
-{
-    return __minimum(tree->root);
-}
-
-struct AVL_Node *AVL_Maximum(const struct AVL *tree)
-{
-    return __maximum(tree->root);
-}
-
-static inline struct AVL_Node *__search(const struct AVL_Node *x,
-    const struct AVL_Node *key_node,
-    int (*Compare)(const struct AVL_Node *, const struct AVL_Node *))
-{
-    while (x != NULL) {
-        int diff = Compare(key_node, x);
-        if (diff == 0)
-            break;
-
-        x = diff < 0 ? x->left : x->right;
-    }
-
-    return (struct AVL_Node *)x;
-}
-
-struct AVL_Node *AVL_Search(
-    const struct AVL *tree, const struct AVL_Node *key_node)
-{
-    return __search(tree->root, key_node, tree->Compare);
-}
-
 static inline struct AVL_Node *__next(struct AVL_Node *x)
 {
     struct AVL_Node *parent;
-
-    if (__isEmpty(x))
-        return NULL;
 
     if (x->right != NULL) {
         x = x->right;
@@ -305,9 +280,6 @@ static inline struct AVL_Node *__prev(struct AVL_Node *x)
 {
     struct AVL_Node *parent;
 
-    if (__isEmpty(x))
-        return NULL;
-
     if (x->left != NULL) {
         x = x->left;
         while (x->right != NULL)
@@ -328,8 +300,12 @@ static inline struct AVL_Node *__prev(struct AVL_Node *x)
 void AVL_Forward(
     struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private)
 {
-    struct AVL_Node *x = __minimum(tree->root);
+    struct AVL_Node *x;
 
+    if (__isEmpty(tree))
+        return;
+
+    x = __minimum(tree->root);
     while (x != NULL) {
         Call(x, private);
         x = __next(x);
@@ -339,8 +315,12 @@ void AVL_Forward(
 void AVL_Backward(
     struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private)
 {
-    struct AVL_Node *x = __maximum(tree->root);
+    struct AVL_Node *x;
 
+    if (__isEmpty(tree))
+        return;
+
+    x = __maximum(tree->root);
     while (x != NULL) {
         Call(x, private);
         x = __prev(x);
