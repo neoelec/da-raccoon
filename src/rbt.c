@@ -63,11 +63,11 @@ struct RBT_Node *RBT_Maximum(const struct RBT *tree)
     return __maximum(tree, tree->root);
 }
 
-static inline struct RBT_Node *__search(const struct RBT *tree,
-    const struct RBT_Node *x, const struct RBT_Node *key_node)
+static inline struct RBT_Node *__search(
+    const struct RBT *tree, const struct RBT_Node *x, const struct RBT_Node *k)
 {
     while (x != tree->NiL) {
-        int diff = __compare(tree, key_node, x);
+        int diff = __compare(tree, k, x);
         if (diff == 0)
             break;
 
@@ -77,10 +77,9 @@ static inline struct RBT_Node *__search(const struct RBT *tree,
     return (struct RBT_Node *)x;
 }
 
-struct RBT_Node *RBT_Search(
-    const struct RBT *tree, const struct RBT_Node *key_node)
+struct RBT_Node *RBT_Search(const struct RBT *tree, const struct RBT_Node *k)
 {
-    struct RBT_Node *x = __search(tree, tree->root, key_node);
+    struct RBT_Node *x = __search(tree, tree->root, k);
 
     return x == tree->NiL ? NULL : x;
 }
