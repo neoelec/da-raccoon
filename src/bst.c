@@ -6,12 +6,7 @@
 
 #include <container/bst.h>
 
-static inline void __initNode(struct BST_Node *x)
-{
-    x->parent = NULL;
-    x->left = NULL;
-    x->right = NULL;
-}
+#define __compare(tree, a, b) (tree)->Compare(a, b)
 
 void BST_Init(struct BST *tree,
     int (*Compare)(const struct BST_Node *, const struct BST_Node *))
@@ -20,38 +15,50 @@ void BST_Init(struct BST *tree,
     tree->Compare = Compare;
 }
 
-static inline struct BST_Node *__minimum(struct BST_Node *x)
+static inline bool __isEmpty(const struct BST *tree)
 {
-    if (x == NULL)
-        return NULL;
+    return (tree->root == NULL) ? true : false;
+}
 
+bool BST_IsEmpty(const struct BST *tree) { return __isEmpty(tree); }
+
+static inline struct BST_Node *__minimum(const struct BST_Node *x)
+{
     while (x->left != NULL)
         x = x->left;
 
-    return x;
+    return (struct BST_Node *)x;
 }
 
-struct BST_Node *BST_Minimum(struct BST *tree) { return __minimum(tree->root); }
-
-static inline struct BST_Node *__maximum(struct BST_Node *x)
+struct BST_Node *BST_Minimum(const struct BST *tree)
 {
-    if (x == NULL)
+    if (__isEmpty(tree))
         return NULL;
 
+    return __minimum(tree->root);
+}
+
+static inline struct BST_Node *__maximum(const struct BST_Node *x)
+{
     while (x->right != NULL)
         x = x->right;
 
-    return x;
+    return (struct BST_Node *)x;
 }
 
-struct BST_Node *BST_Maximum(struct BST *tree) { return __maximum(tree->root); }
+struct BST_Node *BST_Maximum(const struct BST *tree)
+{
+    if (__isEmpty(tree))
+        return NULL;
 
-static struct BST_Node *__search(struct BST_Node *x, const struct BST_Node *key,
-    int (*Compare)(const struct BST_Node *, const struct BST_Node *))
+    return __maximum(tree->root);
+}
+
+static struct BST_Node *__search(
+    const struct BST *tree, struct BST_Node *x, const struct BST_Node *k)
 {
     while (x != NULL) {
-        int diff = Compare(key, x);
-
+        int diff = __compare(tree, k, x);
         if (diff == 0)
             break;
 
@@ -61,67 +68,47 @@ static struct BST_Node *__search(struct BST_Node *x, const struct BST_Node *key,
     return x;
 }
 
-struct BST_Node *BST_Search(struct BST *tree, const struct BST_Node *key)
+struct BST_Node *BST_Search(
+    const struct BST *tree, const struct BST_Node *k)
 {
-    return __search(tree->root, key, tree->Compare);
+    return __search(tree, tree->root, k);
 }
 
-static inline struct BST_Node *__successor(struct BST_Node *x)
+static inline void __insert(struct BST *tree, struct BST_Node *z)
 {
     struct BST_Node *y;
+    struct BST_Node *x;
 
-    if (x->right != NULL)
-        return __minimum(x->right);
+    y = NULL;
+    x = tree->root;
 
-    y = x->parent;
-    while ((y != NULL) && (x == y->right)) {
-        x = y;
-        y = y->parent;
+    while (x != NULL) {
+        y = x;
+        x = __compare(tree, z, x) < 0 ? x->left : x->right;
     }
 
-    return y;
-}
+    z->parent = y;
 
-static inline struct BST_Node *__predecessor(struct BST_Node *x)
-{
-    struct BST_Node *y;
+    if (y == NULL)
+        tree->root = z;
+    else if (__compare(tree, z, y) < 0)
+        y->left = z;
+    else
+        y->right = z;
 
-    if (x->left != NULL)
-        return __maximum(x->left);
-
-    y = x->parent;
-    while ((y != NULL) || (x == y->left)) {
-        x = y;
-        y = y->parent;
-    }
-
-    return y;
+    z->left = NULL;
+    z->right = NULL;
 }
 
 void BST_Insert(struct BST *tree, struct BST_Node *z)
 {
-    struct BST_Node *y = NULL;
-    struct BST_Node *x = tree->root;
+    __insert(tree, z);
 
-    __initNode(z);
-
-    while (x != NULL) {
-        y = x;
-        x = tree->Compare(z, y) < 0 ? x->left : x->right;
-    }
-
-    z->parent = y;
-    if (y == NULL)
-        tree->root = z;
-    else {
-        if (tree->Compare(z, y) < 0)
-            y->left = z;
-        else
-            y->right = z;
-    }
+    if (tree->root != NULL)
+        tree->root->parent = NULL;
 }
 
-static void __shiftNodes(
+static void __transplant(
     struct BST *tree, struct BST_Node *u, struct BST_Node *v)
 {
     if (u->parent == NULL)
@@ -135,24 +122,100 @@ static void __shiftNodes(
         v->parent = u->parent;
 }
 
-void BST_Remove(struct BST *tree, struct BST_Node *d)
+static inline void __remove(struct BST *tree, struct BST_Node *z)
 {
-    if (d->left == NULL)
-        __shiftNodes(tree, d, d->right);
-    else if (d->right == NULL)
-        __shiftNodes(tree, d, d->left);
+    if (z->left == NULL)
+        __transplant(tree, z, z->right);
+    else if (z->right == NULL)
+        __transplant(tree, z, z->left);
     else {
-        struct BST_Node *e = __successor(d);
+        struct BST_Node *y = __minimum(z->right);
 
-        if (e->parent != d) {
-            __shiftNodes(tree, e, e->right);
-            e->right = d->right;
-            e->right->parent = e;
+        if (y != z->right) {
+            __transplant(tree, y, y->right);
+            y->right = z->right;
+            y->right->parent = y;
         }
 
-        __shiftNodes(tree, d, e);
-        e->left = d->left;
-        e->left->parent = e;
+        __transplant(tree, z, y);
+        y->left = z->left;
+        y->left->parent = y;
+    }
+}
+
+void BST_Remove(struct BST *tree, struct BST_Node *z)
+{
+    __remove(tree, z);
+
+    z->parent = z;
+
+    if (tree->root != NULL)
+        tree->root->parent = NULL;
+}
+
+static inline struct BST_Node *__next(
+    const struct BST *tree, struct BST_Node *x)
+{
+    struct BST_Node *parent;
+
+    if (x->right != NULL) {
+        x = x->right;
+        while (x->left != NULL)
+            x = x->left;
+
+        return x;
+    }
+
+    parent = x->parent;
+    while ((parent != NULL) && (x == parent->right)) {
+        x = parent;
+        parent = x->parent;
+    }
+
+    return parent;
+}
+
+static inline struct BST_Node *__prev(
+    const struct BST *tree, struct BST_Node *x)
+{
+    struct BST_Node *parent;
+
+    if (x->left != NULL) {
+        x = x->left;
+        while (x->right != NULL)
+            x = x->right;
+
+        return x;
+    }
+
+    parent = x->parent;
+    while ((parent != NULL) && (x == parent->left)) {
+        x = parent;
+        parent = x->parent;
+    }
+
+    return parent;
+}
+
+void BST_Forward(
+    struct BST *tree, void (*Call)(struct BST_Node *, void *), void *private)
+{
+    struct BST_Node *x = __minimum(tree->root);
+
+    while (x != NULL) {
+        Call(x, private);
+        x = __next(tree, x);
+    }
+}
+
+void BST_Backward(
+    struct BST *tree, void (*Call)(struct BST_Node *, void *), void *private)
+{
+    struct BST_Node *x = __maximum(tree->root);
+
+    while (x != NULL) {
+        Call(x, private);
+        x = __prev(tree, x);
     }
 }
 
