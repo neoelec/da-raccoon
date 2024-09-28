@@ -228,7 +228,7 @@ static inline void __transplant(
     v->parent = u->parent;
 }
 
-static inline void __fixUpDeletion(struct RBT *tree, struct RBT_Node *x)
+static inline void __fixUpRemoval(struct RBT *tree, struct RBT_Node *x)
 {
     struct RBT_Node *w;
 
@@ -330,7 +330,7 @@ static inline void __remove(struct RBT *tree, struct RBT_Node *z)
     }
 
     if (y_orignal_color == RBT_BLACK)
-        __fixUpDeletion(tree, x);
+        __fixUpRemoval(tree, x);
 }
 
 void RBT_Remove(struct RBT *tree, struct RBT_Node *z)
