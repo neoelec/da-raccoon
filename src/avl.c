@@ -125,7 +125,7 @@ static inline ssize_t __balanceFactor(struct AVL_Node *x)
     return x ? __height(x->left) - __height(x->right) : 0;
 }
 
-static struct AVL_Node *__rebalanceInsert(
+static struct AVL_Node *__rebalanceInsertion(
     struct AVL *tree, struct AVL_Node *x, struct AVL_Node *z)
 {
     ssize_t bf;
@@ -161,7 +161,7 @@ static struct AVL_Node *__insert(
     else
         return x;
 
-    return __rebalanceInsert(tree, x, z);
+    return __rebalanceInsertion(tree, x, z);
 }
 
 void AVL_Insert(struct AVL *tree, struct AVL_Node *z)
@@ -195,7 +195,7 @@ static inline struct AVL_Node *__exchange(
     return b;
 }
 
-static struct AVL_Node *__rebalanceRemove(struct AVL *tree, struct AVL_Node *x)
+static struct AVL_Node *__rebalanceRemoval(struct AVL *tree, struct AVL_Node *x)
 {
     ssize_t bf;
 
@@ -241,7 +241,7 @@ struct AVL_Node *__remove(
         }
     }
 
-    return __rebalanceRemove(tree, x);
+    return __rebalanceRemoval(tree, x);
 }
 
 void AVL_Remove(struct AVL *tree, struct AVL_Node *z)
