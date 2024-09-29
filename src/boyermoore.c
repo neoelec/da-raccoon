@@ -5,6 +5,8 @@
 
 #include <algorithm/boyermoore.h>
 
+#include "common.h"
+
 #define ALPHABET_LEN 256
 
 static inline void __buildBCT(
@@ -54,8 +56,6 @@ static inline void __buildGST(
     }
 }
 
-static inline ssize_t __max(ssize_t a, ssize_t b) { return a > b ? a : b; }
-
 ssize_t BoyerMoore(const char *text, size_t text_len, size_t start,
     const char *pattern, size_t pattern_len)
 {
@@ -78,7 +78,7 @@ ssize_t BoyerMoore(const char *text, size_t text_len, size_t start,
             pos = i;
             break;
         } else {
-            i += __max(GST[j + 1], j - BCT[(size_t)text[i + j]]);
+            i += MAX(GST[j + 1], j - BCT[(size_t)text[i + j]]);
         }
     }
 

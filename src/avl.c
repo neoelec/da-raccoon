@@ -5,7 +5,7 @@
 
 #include <container/avl.h>
 
-#define max(a, b) ((a) > (b) ? (a) : (b))
+#include "common.h"
 
 #define __compare(tree, a, b) (tree)->Compare(a, b)
 
@@ -100,8 +100,8 @@ static inline struct AVL_Node *__rotateLeft(struct AVL_Node *x)
     __setLeftChild(y, x);
     __setRightChild(x, t2);
 
-    x->height = max(__height(x->left), __height(x->right)) + 1;
-    y->height = max(__height(y->left), __height(y->right)) + 1;
+    x->height = MAX(__height(x->left), __height(x->right)) + 1;
+    y->height = MAX(__height(y->left), __height(y->right)) + 1;
 
     return y;
 }
@@ -114,8 +114,8 @@ static inline struct AVL_Node *__rotateRight(struct AVL_Node *y)
     __setRightChild(x, y);
     __setLeftChild(y, t2);
 
-    y->height = max(__height(y->left), __height(y->right)) + 1;
-    x->height = max(__height(x->left), __height(x->right)) + 1;
+    y->height = MAX(__height(y->left), __height(y->right)) + 1;
+    x->height = MAX(__height(x->left), __height(x->right)) + 1;
 
     return x;
 }
@@ -130,7 +130,7 @@ static struct AVL_Node *__rebalanceInsertion(
 {
     ssize_t bf;
 
-    x->height = max(__height(x->left), __height(x->right)) + 1;
+    x->height = MAX(__height(x->left), __height(x->right)) + 1;
 
     bf = __balanceFactor(x);
     if (bf > 1 && __compare(tree, z, x->left) < 0) { // left left case
@@ -202,7 +202,7 @@ static struct AVL_Node *__rebalanceRemoval(struct AVL *tree, struct AVL_Node *x)
     if (x == NULL)
         return NULL;
 
-    x->height = max(__height(x->left), __height(x->right)) + 1;
+    x->height = MAX(__height(x->left), __height(x->right)) + 1;
 
     bf = __balanceFactor(x);
     if (bf > 1 && __balanceFactor(x->left) >= 0) {

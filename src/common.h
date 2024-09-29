@@ -1,8 +1,11 @@
-#ifndef __SRC_INTERNAL__SORT_H__
-#define __SRC_INTERNAL__SORT_H__
+#ifndef __SRC_INTERNAL__COMMON_H__
+#define __SRC_INTERNAL__COMMON_H__
 
 #include <stddef.h>
 #include <stdint.h>
+
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 #define COMPARE(func, base, off_a, off_b, size)                                \
     func((base) + ((off_a) * (size)), (base) + ((off_b) * (size)))
@@ -22,4 +25,4 @@ static inline void b_swap(
     }
 }
 
-#endif /* __SRC_INTERNAL__SORT_H__ */
+#endif /* __SRC_INTERNAL__COMMON_H__ */
