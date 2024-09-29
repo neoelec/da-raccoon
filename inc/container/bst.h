@@ -5,6 +5,7 @@
 #ifndef __BST_H__
 #define __BST_H__
 
+#include <stdbool.h>
 #include <stddef.h>
 
 #include "common.h"
