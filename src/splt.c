@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0+
 // Copyright (c) 2024 YOUNGJIN JOO (neoelec@gmail.com)
 
-#include <stdbool.h>
 #include <stdlib.h>
 
 #include <container/splt.h>
