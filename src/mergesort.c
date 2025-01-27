@@ -8,59 +8,45 @@
 
 #include "common.h"
 
-static void __merge(void *base, size_t size,
-                    int (*Compare)(const void *, const void *), ssize_t start,
-                    ssize_t middle, ssize_t end)
+static inline void __memcpy(void *dest, size_t d_idx, const void *base,
+                            size_t b_idx, size_t size)
 {
-    ssize_t left = start;
-    ssize_t right = middle + 1;
-    ssize_t idx = 0;
-    void *dest = malloc((end - start + 1) * size);
-
-    while (left <= middle && right <= end) {
-        if (COMPARE(Compare, base, left, right, size) < 0) {
-            memcpy(BASE(dest, idx, size), BASE(base, left, size), size);
-            left++;
-        } else {
-            memcpy(BASE(dest, idx, size), BASE(base, right, size), size);
-            right++;
-        }
-
-        idx++;
-    }
-
-    if (left <= middle)
-        memcpy(BASE(dest, idx, size), BASE(base, left, size),
-               (middle - left + 1) * size);
-
-    if (right <= end)
-        memcpy(BASE(dest, idx, size), BASE(base, right, size),
-               (end - right + 1) * size);
-
-    memcpy(BASE(base, start, size), dest, (end - start + 1) * size);
-
-    free(dest);
-}
-
-static void __mergeSort(void *base, size_t size,
-                        int (*Compare)(const void *, const void *),
-                        ssize_t start, ssize_t end)
-{
-    ssize_t middle;
-
-    if (end - start < 1)
-        return;
-
-    middle = (start + end) / 2;
-
-    __mergeSort(base, size, Compare, start, middle);
-    __mergeSort(base, size, Compare, middle + 1, end);
-
-    __merge(base, size, Compare, start, middle, end);
+    memcpy(BASE(dest, d_idx, size), BASE(base, b_idx, size), size);
 }
 
 void MergeSort(void *base, size_t nmemb, size_t size,
                int (*Compare)(const void *, const void *))
 {
-    __mergeSort((uint8_t *)base, size, Compare, 0, nmemb - 1);
+    size_t idx;
+    void *dest = malloc(size * nmemb);
+
+    for (idx = 1; idx < nmemb; idx <<= 1) {
+        size_t first = -2 * idx;
+        size_t second = first + idx;
+
+        while (second + idx * 2 < nmemb) {
+            size_t i, j, k;
+
+            i = k = first = second + idx;
+            j = second = first + idx;
+
+            while (i < first + idx || (j < second + idx && j < nmemb)) {
+                if (COMPARE(Compare, base, i, j, size) <= 0) {
+                    if (i < first + idx)
+                        __memcpy(dest, k++, base, i++, size);
+                    else
+                        __memcpy(dest, k++, base, j++, size);
+                } else {
+                    if (j < second + idx && j < nmemb)
+                        __memcpy(dest, k++, base, j++, size);
+                    else
+                        __memcpy(dest, k++, base, i++, size);
+                }
+            }
+        }
+
+        memcpy(base, dest, nmemb * size);
+    }
+
+    free(dest);
 }
