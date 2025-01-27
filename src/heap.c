@@ -16,9 +16,15 @@ static inline size_t __toOrder(size_t nr_entries)
     return order;
 }
 
-static inline ssize_t __parent(ssize_t idx) { return (idx - 1) / 2; }
+static inline ssize_t __parent(ssize_t idx)
+{
+    return (idx - 1) / 2;
+}
 
-static inline ssize_t __child(ssize_t idx) { return (2 * idx) + 1; }
+static inline ssize_t __child(ssize_t idx)
+{
+    return (2 * idx) + 1;
+}
 
 static inline void __swap(void **a, void **b)
 {
@@ -35,7 +41,7 @@ void Heap_Init(struct Heap *heap, int (*Compare)(const void *, const void *))
 }
 
 void Heap_InitNrEntries(struct Heap *heap, size_t nr_ntries,
-    int (*Compare)(const void *, const void *))
+                        int (*Compare)(const void *, const void *))
 {
     heap->order = __toOrder(nr_ntries);
     heap->nr_entries = nr_ntries;
@@ -105,8 +111,8 @@ void *Heap_RemoveHead(struct Heap *heap)
     return d;
 }
 
-void Heap_Forward(
-    struct Heap *heap, void (*Call)(void *, void *), void *private)
+void Heap_Forward(struct Heap *heap, void (*Call)(void *, void *),
+                  void *private)
 {
     size_t i;
 
@@ -114,7 +120,10 @@ void Heap_Forward(
         Call(heap->entry[i], private);
 };
 
-bool Heap_IsEmpty(struct Heap *heap) { return !heap->used; }
+bool Heap_IsEmpty(struct Heap *heap)
+{
+    return !heap->used;
+}
 
 static inline struct Heap *__expand(struct Heap *heap)
 {

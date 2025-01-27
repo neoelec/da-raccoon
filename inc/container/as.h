@@ -17,7 +17,7 @@ struct AS {
     void *entry[0];
 };
 
-#define AS_BYTES(nr_entries)                                                   \
+#define AS_BYTES(nr_entries) \
     (sizeof(struct AS) + (nr_entries) * (sizeof(void *)))
 
 #ifdef __cplusplus
@@ -31,8 +31,8 @@ extern void *AS_Top(const struct AS *stack);
 extern size_t AS_Count(const struct AS *stack);
 extern bool AS_IsEmpty(const struct AS *stack);
 extern bool AS_IsFull(const struct AS *stack);
-extern void AS_Forward(
-    struct AS *stack, void (*Call)(void *, void *), void *private);
+extern void AS_Forward(struct AS *stack, void (*Call)(void *, void *),
+                       void *private);
 
 #ifdef __cplusplus
 }

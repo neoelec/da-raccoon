@@ -15,7 +15,7 @@ extern "C" {
 #endif
 
 extern ssize_t BruteForceSearch(const char *text, size_t text_len, size_t start,
-    const char *pattern, size_t pattern_len);
+                                const char *pattern, size_t pattern_len);
 
 #ifdef __cplusplus
 }

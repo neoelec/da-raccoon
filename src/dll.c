@@ -53,7 +53,7 @@ struct DLL_Node *DLL_GetNode(const struct DLL_Node *head, ssize_t n)
 }
 
 void DLL_Forward(struct DLL_Node *head, void (*Call)(struct DLL_Node *, void *),
-    void *private)
+                 void *private)
 {
     struct DLL_Node *node = head->next;
 
@@ -63,8 +63,8 @@ void DLL_Forward(struct DLL_Node *head, void (*Call)(struct DLL_Node *, void *),
     }
 }
 
-void DLL_Backward(struct DLL_Node *head, void (*Call)(struct DLL_Node *, void *),
-    void *private)
+void DLL_Backward(struct DLL_Node *head,
+                  void (*Call)(struct DLL_Node *, void *), void *private)
 {
     struct DLL_Node *node = head->prev;
 

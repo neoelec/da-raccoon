@@ -8,7 +8,8 @@
 #include <algorithm/binarysearch.h>
 
 static inline void *__binarySearch(const void *key, const uint8_t *base,
-    size_t nmemb, size_t size, int (*Compare)(const void *, const void *))
+                                   size_t nmemb, size_t size,
+                                   int (*Compare)(const void *, const void *))
 {
     ssize_t left, right;
 
@@ -31,7 +32,7 @@ static inline void *__binarySearch(const void *key, const uint8_t *base,
 }
 
 void *BinarySearch(const void *key, const void *base, size_t nmemb, size_t size,
-    int (*Compare)(const void *, const void *))
+                   int (*Compare)(const void *, const void *))
 {
     return __binarySearch(key, (const uint8_t *)base, nmemb, size, Compare);
 }

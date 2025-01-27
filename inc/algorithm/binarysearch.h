@@ -14,7 +14,8 @@ extern "C" {
 #endif
 
 extern void *BinarySearch(const void *key, const void *base, size_t nmemb,
-    size_t size, int (*Compare)(const void *, const void *));
+                          size_t size,
+                          int (*Compare)(const void *, const void *));
 
 #ifdef __cplusplus
 }

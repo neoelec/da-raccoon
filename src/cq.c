@@ -54,11 +54,20 @@ void *CQ_Dequeue(struct CQ *queue)
     return entry;
 }
 
-size_t CQ_Count(const struct CQ *queue) { return __count(queue); }
+size_t CQ_Count(const struct CQ *queue)
+{
+    return __count(queue);
+}
 
-bool CQ_IsEmpty(const struct CQ *queue) { return __isEmpty(queue); }
+bool CQ_IsEmpty(const struct CQ *queue)
+{
+    return __isEmpty(queue);
+}
 
-bool CQ_IsFull(const struct CQ *queue) { return __isFull(queue); }
+bool CQ_IsFull(const struct CQ *queue)
+{
+    return __isFull(queue);
+}
 
 void *CQ_Front(const struct CQ *queue)
 {

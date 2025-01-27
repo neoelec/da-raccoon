@@ -25,7 +25,7 @@ extern void SLL_Remove(struct SLL_Node *head, struct SLL_Node *node);
 extern size_t SLL_Count(const struct SLL_Node *head);
 extern struct SLL_Node *SLL_GetNode(const struct SLL_Node *head, ssize_t n);
 extern void SLL_Forward(struct SLL_Node *head,
-    void (*Call)(struct SLL_Node *, void *), void *private);
+                        void (*Call)(struct SLL_Node *, void *), void *private);
 extern void SLL_Reverse(struct SLL_Node *head);
 
 #ifdef __cplusplus

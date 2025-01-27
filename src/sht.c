@@ -4,7 +4,7 @@
 #include <container/sht.h>
 
 void SHT_Init(struct SHT *table, size_t nr_buckets,
-    size_t (*KeyHash)(const struct SHT *, const void *))
+              size_t (*KeyHash)(const struct SHT *, const void *))
 {
     size_t i;
 
@@ -48,8 +48,8 @@ void *SHT_Get(const struct SHT *table, void *key_entry)
     return table->bucket[key];
 }
 
-void SHT_Traverse(
-    struct SHT *table, void (*Call)(void *, void *), void *private)
+void SHT_Traverse(struct SHT *table, void (*Call)(void *, void *),
+                  void *private)
 {
     size_t i;
 

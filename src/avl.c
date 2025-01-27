@@ -10,7 +10,7 @@
 #define __compare(tree, a, b) (tree)->Compare(a, b)
 
 void AVL_Init(struct AVL *tree,
-    int (*Compare)(const struct AVL_Node *, const struct AVL_Node *))
+              int (*Compare)(const struct AVL_Node *, const struct AVL_Node *))
 {
     tree->root = NULL;
     tree->Compare = Compare;
@@ -21,7 +21,10 @@ static inline bool __isEmpty(const struct AVL *tree)
     return (tree->root == NULL) ? true : false;
 }
 
-bool AVL_IsEmpty(const struct AVL *tree) { return __isEmpty(tree); }
+bool AVL_IsEmpty(const struct AVL *tree)
+{
+    return __isEmpty(tree);
+}
 
 static inline struct AVL_Node *__minimum(const struct AVL_Node *x)
 {
@@ -55,8 +58,9 @@ struct AVL_Node *AVL_Maximum(const struct AVL *tree)
     return __maximum(tree->root);
 }
 
-static inline struct AVL_Node *__search(
-    const struct AVL *tree, const struct AVL_Node *x, const struct AVL_Node *k)
+static inline struct AVL_Node *__search(const struct AVL *tree,
+                                        const struct AVL_Node *x,
+                                        const struct AVL_Node *k)
 {
     while (x != NULL) {
         int diff = __compare(tree, k, x);
@@ -90,7 +94,10 @@ static inline void __setRightChild(struct AVL_Node *x, struct AVL_Node *c)
         c->parent = x;
 }
 
-static inline ssize_t __height(struct AVL_Node *x) { return x ? x->height : 0; }
+static inline ssize_t __height(struct AVL_Node *x)
+{
+    return x ? x->height : 0;
+}
 
 static inline struct AVL_Node *__rotateLeft(struct AVL_Node *x)
 {
@@ -125,8 +132,8 @@ static inline ssize_t __balanceFactor(struct AVL_Node *x)
     return x ? __height(x->left) - __height(x->right) : 0;
 }
 
-static struct AVL_Node *__rebalanceInsertion(
-    struct AVL *tree, struct AVL_Node *x, struct AVL_Node *z)
+static struct AVL_Node *
+__rebalanceInsertion(struct AVL *tree, struct AVL_Node *x, struct AVL_Node *z)
 {
     ssize_t bf;
 
@@ -135,8 +142,8 @@ static struct AVL_Node *__rebalanceInsertion(
     bf = __balanceFactor(x);
     if (bf > 1 && __compare(tree, z, x->left) < 0) { // left left case
         return __rotateRight(x);
-    } else if (bf < -1
-        && __compare(tree, z, x->right) > 0) { // right right case
+    } else if (bf < -1 &&
+               __compare(tree, z, x->right) > 0) { // right right case
         return __rotateLeft(x);
     } else if (bf > 1 && __compare(tree, z, x->left) > 0) { // left right case
         __setLeftChild(x, __rotateLeft(x->left));
@@ -149,8 +156,8 @@ static struct AVL_Node *__rebalanceInsertion(
     return x;
 }
 
-static struct AVL_Node *__insert(
-    struct AVL *tree, struct AVL_Node *x, struct AVL_Node *z)
+static struct AVL_Node *__insert(struct AVL *tree, struct AVL_Node *x,
+                                 struct AVL_Node *z)
 {
     if (x == NULL)
         return z;
@@ -176,8 +183,8 @@ void AVL_Insert(struct AVL *tree, struct AVL_Node *z)
         tree->root->parent = NULL;
 }
 
-static inline struct AVL_Node *__exchange(
-    const struct AVL_Node *a, struct AVL_Node *b)
+static inline struct AVL_Node *__exchange(const struct AVL_Node *a,
+                                          struct AVL_Node *b)
 {
     __setLeftChild(b, a->left);
     __setRightChild(b, a->right);
@@ -220,8 +227,8 @@ static struct AVL_Node *__rebalanceRemoval(struct AVL *tree, struct AVL_Node *x)
     return x;
 }
 
-struct AVL_Node *__remove(
-    struct AVL *tree, struct AVL_Node *x, struct AVL_Node *z)
+struct AVL_Node *__remove(struct AVL *tree, struct AVL_Node *x,
+                          struct AVL_Node *z)
 {
     struct AVL_Node *y;
 
@@ -297,8 +304,8 @@ static inline struct AVL_Node *__prev(struct AVL_Node *x)
     return parent;
 }
 
-void AVL_Forward(
-    struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private)
+void AVL_Forward(struct AVL *tree, void (*Call)(struct AVL_Node *, void *),
+                 void *private)
 {
     struct AVL_Node *x;
 
@@ -312,8 +319,8 @@ void AVL_Forward(
     }
 }
 
-void AVL_Backward(
-    struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private)
+void AVL_Backward(struct AVL *tree, void (*Call)(struct AVL_Node *, void *),
+                  void *private)
 {
     struct AVL_Node *x;
 
@@ -327,8 +334,9 @@ void AVL_Backward(
     }
 }
 
-static void __forEachPreorder(
-    struct AVL_Node *x, void (*Call)(struct AVL_Node *, void *), void *private)
+static void __forEachPreorder(struct AVL_Node *x,
+                              void (*Call)(struct AVL_Node *, void *),
+                              void *private)
 {
     if (x == NULL)
         return;
@@ -338,14 +346,15 @@ static void __forEachPreorder(
     __forEachPreorder(x->right, Call, private);
 }
 
-void AVL_Preorder(
-    struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private)
+void AVL_Preorder(struct AVL *tree, void (*Call)(struct AVL_Node *, void *),
+                  void *private)
 {
     __forEachPreorder(tree->root, Call, private);
 }
 
-static void __forEachInorder(
-    struct AVL_Node *x, void (*Call)(struct AVL_Node *, void *), void *private)
+static void __forEachInorder(struct AVL_Node *x,
+                             void (*Call)(struct AVL_Node *, void *),
+                             void *private)
 {
     if (x == NULL)
         return;
@@ -355,14 +364,15 @@ static void __forEachInorder(
     __forEachInorder(x->right, Call, private);
 }
 
-void AVL_Inorder(
-    struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private)
+void AVL_Inorder(struct AVL *tree, void (*Call)(struct AVL_Node *, void *),
+                 void *private)
 {
     __forEachInorder(tree->root, Call, private);
 }
 
-static void __forEachPostorder(
-    struct AVL_Node *x, void (*Call)(struct AVL_Node *, void *), void *private)
+static void __forEachPostorder(struct AVL_Node *x,
+                               void (*Call)(struct AVL_Node *, void *),
+                               void *private)
 {
     if (x == NULL)
         return;
@@ -372,8 +382,8 @@ static void __forEachPostorder(
     Call(x, private);
 }
 
-void AVL_Postorder(
-    struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private)
+void AVL_Postorder(struct AVL *tree, void (*Call)(struct AVL_Node *, void *),
+                   void *private)
 {
     __forEachPostorder(tree->root, Call, private);
 }

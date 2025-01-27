@@ -3,7 +3,10 @@
 
 #include <container/cdll.h>
 
-void CDLL_Init(struct CDLL *list) { list->head = NULL; }
+void CDLL_Init(struct CDLL *list)
+{
+    list->head = NULL;
+}
 
 void CDLL_InsertHead(struct CDLL *list, struct DLL_Node *node)
 {
@@ -57,8 +60,8 @@ struct DLL_Node *CDLL_GetNode(const struct CDLL *list, ssize_t n)
     return node;
 }
 
-void CDLL_Forward(
-    struct CDLL *list, void (*Call)(struct DLL_Node *, void *), void *private)
+void CDLL_Forward(struct CDLL *list, void (*Call)(struct DLL_Node *, void *),
+                  void *private)
 {
     struct DLL_Node tmp_head;
 
@@ -67,8 +70,8 @@ void CDLL_Forward(
     DLL_Remove(&tmp_head);
 }
 
-void CDLL_Backward(
-    struct CDLL *list, void (*Call)(struct DLL_Node *, void *), void *private)
+void CDLL_Backward(struct CDLL *list, void (*Call)(struct DLL_Node *, void *),
+                   void *private)
 {
     struct DLL_Node tmp_head;
 

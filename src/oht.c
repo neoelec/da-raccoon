@@ -6,8 +6,8 @@
 #include <container/oht.h>
 
 void OHT_Init(struct OHT *table, size_t nr_buckets,
-    size_t (*KeyHash)(const struct OHT *, const void *),
-    size_t (*StepHash)(const struct OHT *, const void *))
+              size_t (*KeyHash)(const struct OHT *, const void *),
+              size_t (*StepHash)(const struct OHT *, const void *))
 {
     size_t i;
 
@@ -33,7 +33,10 @@ static void __insert(struct OHT *table, void *entry)
     table->used++;
 }
 
-void OHT_Insert(struct OHT *table, void *entry) { __insert(table, entry); }
+void OHT_Insert(struct OHT *table, void *entry)
+{
+    __insert(table, entry);
+}
 
 void OHT_Remove(struct OHT *table, void *entry)
 {
@@ -50,7 +53,7 @@ void OHT_Remove(struct OHT *table, void *entry)
 }
 
 void *OHT_Get(const struct OHT *table, const void *key_entry,
-    int (*Compare)(const void *, const void *))
+              int (*Compare)(const void *, const void *))
 {
     size_t addr, addr_1st;
     size_t step_size;
@@ -118,8 +121,8 @@ struct OHT *OHT_Shrink(struct OHT *table, size_t threshold)
     return __rehash(table, table->nr_buckets / 2);
 }
 
-void OHT_Traverse(
-    struct OHT *table, void (*Call)(void *, void *), void *private)
+void OHT_Traverse(struct OHT *table, void (*Call)(void *, void *),
+                  void *private)
 {
     size_t i;
 

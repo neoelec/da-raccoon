@@ -5,7 +5,10 @@
 
 #include <container/lcrs.h>
 
-void LCRS_Init(struct LCRS *tree) { tree->root = NULL; }
+void LCRS_Init(struct LCRS *tree)
+{
+    tree->root = NULL;
+}
 
 void LCRS_InitNode(struct LCRS_Node *node)
 {

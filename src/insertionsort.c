@@ -9,7 +9,7 @@
 #include <algorithm/insertionsort.h>
 
 static inline void __insertionSort(uint8_t *base, size_t nmemb, size_t size,
-    int (*Compare)(const void *, const void *))
+                                   int (*Compare)(const void *, const void *))
 {
     size_t i;
     uint8_t tmp_static[16];
@@ -33,7 +33,7 @@ static inline void __insertionSort(uint8_t *base, size_t nmemb, size_t size,
 }
 
 void InsertionSort(void *base, size_t nmemb, size_t size,
-    int (*Compare)(const void *, const void *))
+                   int (*Compare)(const void *, const void *))
 {
     __insertionSort((uint8_t *)base, nmemb, size, Compare);
 }

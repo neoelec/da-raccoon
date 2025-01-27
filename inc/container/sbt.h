@@ -24,12 +24,14 @@ extern "C" {
 
 extern void SBT_Init(struct SBT *tree);
 extern void SBT_InitNode(struct SBT_Node *node);
-extern void SBT_Preorder(
-    struct SBT *tree, void (*Call)(struct SBT_Node *, void *), void *private);
-extern void SBT_Inorder(
-    struct SBT *tree, void (*Call)(struct SBT_Node *, void *), void *private);
-extern void SBT_Postorder(
-    struct SBT *tree, void (*Call)(struct SBT_Node *, void *), void *private);
+extern void SBT_Preorder(struct SBT *tree,
+                         void (*Call)(struct SBT_Node *, void *),
+                         void *private);
+extern void SBT_Inorder(struct SBT *tree,
+                        void (*Call)(struct SBT_Node *, void *), void *private);
+extern void SBT_Postorder(struct SBT *tree,
+                          void (*Call)(struct SBT_Node *, void *),
+                          void *private);
 
 #ifdef __cplusplus
 }

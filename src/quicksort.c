@@ -8,7 +8,8 @@
 #include "common.h"
 
 static inline ssize_t __partition(uint8_t *base, size_t size,
-    int (*Compare)(const void *, const void *), ssize_t left, ssize_t right)
+                                  int (*Compare)(const void *, const void *),
+                                  ssize_t left, ssize_t right)
 {
     ssize_t first = left;
     uint8_t *pivot = &base[first * size];
@@ -33,7 +34,8 @@ static inline ssize_t __partition(uint8_t *base, size_t size,
 }
 
 static void __quickSort(uint8_t *base, size_t size,
-    int (*Compare)(const void *, const void *), ssize_t left, ssize_t right)
+                        int (*Compare)(const void *, const void *),
+                        ssize_t left, ssize_t right)
 {
     if (left < right) {
         ssize_t index = __partition(base, size, Compare, left, right);
@@ -44,7 +46,7 @@ static void __quickSort(uint8_t *base, size_t size,
 }
 
 void QuickSort(void *base, size_t nmemb, size_t size,
-    int (*Compare)(const void *, const void *))
+               int (*Compare)(const void *, const void *))
 {
     __quickSort((uint8_t *)base, size, Compare, 0, nmemb - 1);
 }

@@ -3,7 +3,10 @@
 
 #include <container/llq.h>
 
-static inline size_t __count(const struct LLQ *queue) { return queue->count; }
+static inline size_t __count(const struct LLQ *queue)
+{
+    return queue->count;
+}
 
 static inline bool __isEmpty(const struct LLQ *queue)
 {
@@ -75,7 +78,10 @@ void LLQ_InsertRear(struct LLQ *queue, struct DLL_Node *node)
     __insertRear(queue, node);
 }
 
-struct DLL_Node *LLQ_Dequeue(struct LLQ *queue) { return __removeFront(queue); }
+struct DLL_Node *LLQ_Dequeue(struct LLQ *queue)
+{
+    return __removeFront(queue);
+}
 
 struct DLL_Node *LLQ_RemoveFront(struct LLQ *queue)
 {
@@ -87,9 +93,15 @@ struct DLL_Node *LLQ_RemoveRear(struct LLQ *queue)
     return __removeRear(queue);
 }
 
-size_t LLQ_Count(const struct LLQ *queue) { return __count(queue); }
+size_t LLQ_Count(const struct LLQ *queue)
+{
+    return __count(queue);
+}
 
-bool LLQ_IsEmpty(const struct LLQ *queue) { return __isEmpty(queue); }
+bool LLQ_IsEmpty(const struct LLQ *queue)
+{
+    return __isEmpty(queue);
+}
 
 struct DLL_Node *LLQ_Front(const struct LLQ *queue)
 {
@@ -107,8 +119,8 @@ struct DLL_Node *LLQ_Rear(const struct LLQ *queue)
     return queue->head.prev;
 }
 
-void LLQ_Forward(
-    struct LLQ *queue, void (*Call)(struct DLL_Node *, void *), void *private)
+void LLQ_Forward(struct LLQ *queue, void (*Call)(struct DLL_Node *, void *),
+                 void *private)
 {
     DLL_Forward(&queue->head, Call, private);
 }

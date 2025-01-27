@@ -4,7 +4,7 @@
 #include <algorithm/bruteforcesearch.h>
 
 ssize_t BruteForceSearch(const char *text, size_t text_len, size_t start,
-    const char *pattern, size_t pattern_len)
+                         const char *pattern, size_t pattern_len)
 {
     ssize_t i;
 

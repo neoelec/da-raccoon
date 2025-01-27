@@ -14,7 +14,7 @@ extern "C" {
 #endif
 
 extern void ShellSort(void *base, size_t nmemb, size_t size,
-    int (*Compare)(const void *, const void *));
+                      int (*Compare)(const void *, const void *));
 
 #ifdef __cplusplus
 }

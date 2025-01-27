@@ -17,7 +17,7 @@ struct OHT {
     void *bucket[0];
 };
 
-#define OHT_BYTES(nr_buckets)                                                  \
+#define OHT_BYTES(nr_buckets) \
     (sizeof(struct OHT) + (nr_buckets) * (sizeof(struct OHT_Head *)))
 
 #ifdef __cplusplus
@@ -25,16 +25,16 @@ extern "C" {
 #endif
 
 extern void OHT_Init(struct OHT *table, size_t nr_buckets,
-    size_t (*KeyHash)(const struct OHT *, const void *),
-    size_t (*StepHash)(const struct OHT *, const void *));
+                     size_t (*KeyHash)(const struct OHT *, const void *),
+                     size_t (*StepHash)(const struct OHT *, const void *));
 extern void OHT_Insert(struct OHT *table, void *entry);
 extern void OHT_Remove(struct OHT *table, void *entry);
 extern void *OHT_Get(const struct OHT *table, const void *key_node,
-    int (*Compare)(const void *, const void *));
+                     int (*Compare)(const void *, const void *));
 extern struct OHT *OHT_Expand(struct OHT *table, size_t threshold);
 extern struct OHT *OHT_Shrink(struct OHT *table, size_t threshold);
-extern void OHT_Traverse(
-    struct OHT *table, void (*Call)(void *, void *), void *private);
+extern void OHT_Traverse(struct OHT *table, void (*Call)(void *, void *),
+                         void *private);
 
 #ifdef __cplusplus
 }

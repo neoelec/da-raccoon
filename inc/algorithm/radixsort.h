@@ -11,8 +11,8 @@
 extern "C" {
 #endif
 
-extern void RadixSort(
-    void *base, size_t nmemb, size_t size, unsigned long long order);
+extern void RadixSort(void *base, size_t nmemb, size_t size,
+                      unsigned long long order);
 #ifdef __cplusplus
 }
 #endif

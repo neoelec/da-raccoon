@@ -9,7 +9,8 @@
 #include <algorithm/shellsort.h>
 
 static inline void __intervalSort(uint8_t *base, size_t size, ssize_t begin,
-    ssize_t end, ssize_t intv, int (*Compare)(const void *, const void *))
+                                  ssize_t end, ssize_t intv,
+                                  int (*Compare)(const void *, const void *))
 {
     ssize_t i;
     uint8_t tmp_static[16];
@@ -37,7 +38,7 @@ static inline void __intervalSort(uint8_t *base, size_t size, ssize_t begin,
 }
 
 void ShellSort(void *base, size_t nmemb, size_t size,
-    int (*Compare)(const void *, const void *))
+               int (*Compare)(const void *, const void *))
 {
     size_t intv;
     size_t i;

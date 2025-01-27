@@ -3,7 +3,10 @@
 
 #include <container/lls.h>
 
-static inline size_t __count(const struct LLS *stack) { return stack->count; }
+static inline size_t __count(const struct LLS *stack)
+{
+    return stack->count;
+}
 
 static inline bool __isEmpty(const struct LLS *stack)
 {
@@ -35,14 +38,23 @@ struct SLL_Node *LLS_Pop(struct LLS *stack)
     return node;
 }
 
-struct SLL_Node *LLS_Top(const struct LLS *stack) { return stack->head.next; }
+struct SLL_Node *LLS_Top(const struct LLS *stack)
+{
+    return stack->head.next;
+}
 
-size_t LLS_Count(const struct LLS *stack) { return __count(stack); }
+size_t LLS_Count(const struct LLS *stack)
+{
+    return __count(stack);
+}
 
-bool LLS_IsEmpty(const struct LLS *stack) { return __isEmpty(stack); }
+bool LLS_IsEmpty(const struct LLS *stack)
+{
+    return __isEmpty(stack);
+}
 
-void LLS_Forward(
-    struct LLS *stack, void (*Call)(struct SLL_Node *, void *), void *private)
+void LLS_Forward(struct LLS *stack, void (*Call)(struct SLL_Node *, void *),
+                 void *private)
 {
     SLL_Forward(&stack->head, Call, private);
 }

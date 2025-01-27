@@ -14,18 +14,18 @@ static inline size_t __hash(const char *string, size_t len)
     return hash_value;
 }
 
-static inline size_t __reHash(
-    const char *string, int len, int start, int hash_prev, int coefficient)
+static inline size_t __reHash(const char *string, int len, int start,
+                              int hash_prev, int coefficient)
 {
     if (start == 0)
         return hash_prev;
 
-    return ((hash_prev - coefficient * string[start - 1]) * 2)
-        + string[start + len - 1];
+    return ((hash_prev - coefficient * string[start - 1]) * 2) +
+           string[start + len - 1];
 }
 
 ssize_t KarpRabin(const char *text, size_t text_len, size_t start,
-    const char *pattern, size_t pattern_len)
+                  const char *pattern, size_t pattern_len)
 {
     size_t i;
     size_t coefficient = 1 << (pattern_len - 1);

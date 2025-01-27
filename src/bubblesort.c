@@ -6,7 +6,7 @@
 #include "common.h"
 
 void BubbleSort(void *base, size_t nmemb, size_t size,
-    int (*Compare)(const void *, const void *))
+                int (*Compare)(const void *, const void *))
 {
     size_t i;
 

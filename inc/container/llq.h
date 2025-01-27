@@ -30,8 +30,8 @@ extern size_t LLQ_Count(const struct LLQ *queue);
 extern bool LLQ_IsEmpty(const struct LLQ *queue);
 extern struct DLL_Node *LLQ_Front(const struct LLQ *queue);
 extern struct DLL_Node *LLQ_Rear(const struct LLQ *queue);
-extern void LLQ_Forward(
-    struct LLQ *queue, void (*Call)(struct DLL_Node *, void *), void *private);
+extern void LLQ_Forward(struct LLQ *queue,
+                        void (*Call)(struct DLL_Node *, void *), void *private);
 
 #ifdef __cplusplus
 }

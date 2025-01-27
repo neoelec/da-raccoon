@@ -9,7 +9,7 @@
 #define __compare(tree, a, b) (tree)->Compare(a, b)
 
 void RBT_Init(struct RBT *tree,
-    int (*Compare)(const struct RBT_Node *, const struct RBT_Node *))
+              int (*Compare)(const struct RBT_Node *, const struct RBT_Node *))
 {
     struct RBT_Node *NiL = &tree->__NiL;
 
@@ -27,10 +27,13 @@ static inline bool __isEmpty(const struct RBT *tree)
     return (tree->root == tree->NiL) ? true : false;
 }
 
-bool RBT_IsEmpty(const struct RBT *tree) { return __isEmpty(tree); }
+bool RBT_IsEmpty(const struct RBT *tree)
+{
+    return __isEmpty(tree);
+}
 
-static inline struct RBT_Node *__minimum(
-    const struct RBT *tree, const struct RBT_Node *x)
+static inline struct RBT_Node *__minimum(const struct RBT *tree,
+                                         const struct RBT_Node *x)
 {
     while (x->left != tree->NiL)
         x = x->left;
@@ -46,8 +49,8 @@ struct RBT_Node *RBT_Minimum(const struct RBT *tree)
     return __minimum(tree, tree->root);
 }
 
-static inline struct RBT_Node *__maximum(
-    const struct RBT *tree, const struct RBT_Node *x)
+static inline struct RBT_Node *__maximum(const struct RBT *tree,
+                                         const struct RBT_Node *x)
 {
     while (x->right != tree->NiL)
         x = x->right;
@@ -63,8 +66,9 @@ struct RBT_Node *RBT_Maximum(const struct RBT *tree)
     return __maximum(tree, tree->root);
 }
 
-static inline struct RBT_Node *__search(
-    const struct RBT *tree, const struct RBT_Node *x, const struct RBT_Node *k)
+static inline struct RBT_Node *__search(const struct RBT *tree,
+                                        const struct RBT_Node *x,
+                                        const struct RBT_Node *k)
 {
     while (x != tree->NiL) {
         int diff = __compare(tree, k, x);
@@ -215,8 +219,8 @@ void RBT_Insert(struct RBT *tree, struct RBT_Node *z)
         tree->root->parent = tree->NiL;
 }
 
-static inline void __transplant(
-    struct RBT *tree, struct RBT_Node *u, struct RBT_Node *v)
+static inline void __transplant(struct RBT *tree, struct RBT_Node *u,
+                                struct RBT_Node *v)
 {
     if (u->parent == tree->NiL)
         tree->root = v;
@@ -343,8 +347,8 @@ void RBT_Remove(struct RBT *tree, struct RBT_Node *z)
         tree->root->parent = tree->NiL;
 }
 
-static inline struct RBT_Node *__next(
-    const struct RBT *tree, struct RBT_Node *x)
+static inline struct RBT_Node *__next(const struct RBT *tree,
+                                      struct RBT_Node *x)
 {
     struct RBT_Node *parent;
 
@@ -365,8 +369,8 @@ static inline struct RBT_Node *__next(
     return parent;
 }
 
-static inline struct RBT_Node *__prev(
-    const struct RBT *tree, struct RBT_Node *x)
+static inline struct RBT_Node *__prev(const struct RBT *tree,
+                                      struct RBT_Node *x)
 {
     struct RBT_Node *parent;
 
@@ -387,8 +391,8 @@ static inline struct RBT_Node *__prev(
     return parent;
 }
 
-void RBT_Forward(
-    struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private)
+void RBT_Forward(struct RBT *tree, void (*Call)(struct RBT_Node *, void *),
+                 void *private)
 {
     struct RBT_Node *x = __minimum(tree, tree->root);
 
@@ -398,8 +402,8 @@ void RBT_Forward(
     }
 }
 
-void RBT_Backward(
-    struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private)
+void RBT_Backward(struct RBT *tree, void (*Call)(struct RBT_Node *, void *),
+                  void *private)
 {
     struct RBT_Node *x = __maximum(tree, tree->root);
 
@@ -410,7 +414,8 @@ void RBT_Backward(
 }
 
 static void __forEachPreorder(const struct RBT *tree, struct RBT_Node *x,
-    void (*Call)(struct RBT_Node *, void *), void *private)
+                              void (*Call)(struct RBT_Node *, void *),
+                              void *private)
 {
     if (x == tree->NiL)
         return;
@@ -420,14 +425,15 @@ static void __forEachPreorder(const struct RBT *tree, struct RBT_Node *x,
     __forEachPreorder(tree, x->right, Call, private);
 }
 
-void RBT_Preorder(
-    struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private)
+void RBT_Preorder(struct RBT *tree, void (*Call)(struct RBT_Node *, void *),
+                  void *private)
 {
     __forEachPreorder(tree, tree->root, Call, private);
 }
 
 static void __forEachInorder(const struct RBT *tree, struct RBT_Node *x,
-    void (*Call)(struct RBT_Node *, void *), void *private)
+                             void (*Call)(struct RBT_Node *, void *),
+                             void *private)
 {
     if (x == tree->NiL)
         return;
@@ -437,14 +443,15 @@ static void __forEachInorder(const struct RBT *tree, struct RBT_Node *x,
     __forEachInorder(tree, x->right, Call, private);
 }
 
-void RBT_Inorder(
-    struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private)
+void RBT_Inorder(struct RBT *tree, void (*Call)(struct RBT_Node *, void *),
+                 void *private)
 {
     __forEachInorder(tree, tree->root, Call, private);
 }
 
 static void __forEachPostorder(const struct RBT *tree, struct RBT_Node *x,
-    void (*Call)(struct RBT_Node *, void *), void *private)
+                               void (*Call)(struct RBT_Node *, void *),
+                               void *private)
 {
     if (x == tree->NiL)
         return;
@@ -454,8 +461,8 @@ static void __forEachPostorder(const struct RBT *tree, struct RBT_Node *x,
     Call(x, private);
 }
 
-void RBT_Postorder(
-    struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private)
+void RBT_Postorder(struct RBT *tree, void (*Call)(struct RBT_Node *, void *),
+                   void *private)
 {
     __forEachPostorder(tree, tree->root, Call, private);
 }

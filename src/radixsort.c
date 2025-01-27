@@ -14,8 +14,8 @@ static inline unsigned long long __maskULL(size_t size)
     return (~ull) >> ((sizeof(ull) - (unsigned long long)size) * 8);
 }
 
-static inline unsigned long long __getMax(
-    uint8_t *base, size_t nmemb, size_t size)
+static inline unsigned long long __getMax(uint8_t *base, size_t nmemb,
+                                          size_t size)
 {
     unsigned long long mask_ull = __maskULL(size);
     unsigned long long max = 0;
@@ -31,8 +31,9 @@ static inline unsigned long long __getMax(
 }
 
 static inline unsigned long long __toIdx(uint8_t *base, ssize_t i, size_t size,
-    unsigned long long shift, unsigned long long mask_radix,
-    unsigned long long mask_ull)
+                                         unsigned long long shift,
+                                         unsigned long long mask_radix,
+                                         unsigned long long mask_ull)
 {
     unsigned long long tmp = *(unsigned long long *)&base[i * size] & mask_ull;
 
@@ -40,8 +41,10 @@ static inline unsigned long long __toIdx(uint8_t *base, ssize_t i, size_t size,
 }
 
 static inline void __countSort(uint8_t *base, size_t nmemb, size_t size,
-    unsigned long long shift, unsigned long long order,
-    unsigned long long *output, unsigned long long *count)
+                               unsigned long long shift,
+                               unsigned long long order,
+                               unsigned long long *output,
+                               unsigned long long *count)
 {
     unsigned long long mask_ull = __maskULL(size);
     unsigned long long mask_radix = (1 << order) - 1;
@@ -60,8 +63,8 @@ static inline void __countSort(uint8_t *base, size_t nmemb, size_t size,
 
     for (i = nmemb - 1; i >= 0; i--) {
         idx = __toIdx(base, i, size, shift, mask_radix, mask_ull);
-        output[count[idx] - 1]
-            = *(unsigned long long *)&base[i * size] & mask_ull;
+        output[count[idx] - 1] = *(unsigned long long *)&base[i * size] &
+                                 mask_ull;
         count[idx]--;
     }
 
@@ -69,8 +72,8 @@ static inline void __countSort(uint8_t *base, size_t nmemb, size_t size,
         memcpy(&base[i * size], &output[i], size);
 }
 
-static inline void __radixSort(
-    uint8_t *base, size_t nmemb, size_t size, unsigned long long order)
+static inline void __radixSort(uint8_t *base, size_t nmemb, size_t size,
+                               unsigned long long order)
 {
     unsigned long long max = __getMax(base, nmemb, size);
     unsigned long long *output = malloc(sizeof(*output) * nmemb);

@@ -15,7 +15,7 @@ struct SHT {
     void *bucket[0];
 };
 
-#define SHT_BYTES(nr_buckets)                                                  \
+#define SHT_BYTES(nr_buckets) \
     (sizeof(struct SHT) + (nr_buckets) * (sizeof(void *)))
 
 #ifdef __cplusplus
@@ -23,12 +23,12 @@ extern "C" {
 #endif
 
 extern void SHT_Init(struct SHT *table, size_t nr_buckets,
-    size_t (*KeyHash)(const struct SHT *, const void *));
+                     size_t (*KeyHash)(const struct SHT *, const void *));
 extern void *SHT_Insert(struct SHT *table, void *entry);
 extern void *SHT_Remove(struct SHT *table, void *entry);
 extern void *SHT_Get(const struct SHT *table, void *key_entry);
-extern void SHT_Traverse(
-    struct SHT *table, void (*Call)(void *, void *), void *private);
+extern void SHT_Traverse(struct SHT *table, void (*Call)(void *, void *),
+                         void *private);
 
 #ifdef __cplusplus
 }

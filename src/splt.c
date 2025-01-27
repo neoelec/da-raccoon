@@ -7,8 +7,8 @@
 
 #define __compare(tree, a, b) (tree)->Compare(a, b)
 
-void SPLT_Init(struct SPLT *tree,
-    int (*Compare)(const struct SPLT_Node *, const struct SPLT_Node *))
+void SPLT_Init(struct SPLT *tree, int (*Compare)(const struct SPLT_Node *,
+                                                 const struct SPLT_Node *))
 {
     tree->root = NULL;
     tree->Compare = Compare;
@@ -19,10 +19,13 @@ static inline bool __isEmpty(const struct SPLT *tree)
     return (tree->root == NULL) ? true : false;
 }
 
-bool SPLT_IsEmpty(const struct SPLT *tree) { return __isEmpty(tree); }
+bool SPLT_IsEmpty(const struct SPLT *tree)
+{
+    return __isEmpty(tree);
+}
 
-static inline struct SPLT_Node *__minimum(
-    const struct SPLT *tree, const struct SPLT_Node *x)
+static inline struct SPLT_Node *__minimum(const struct SPLT *tree,
+                                          const struct SPLT_Node *x)
 {
     while (x->left != NULL)
         x = x->left;
@@ -38,8 +41,8 @@ struct SPLT_Node *SPLT_Minimum(const struct SPLT *tree)
     return __minimum(tree, tree->root);
 }
 
-static inline struct SPLT_Node *__maximum(
-    const struct SPLT *tree, const struct SPLT_Node *x)
+static inline struct SPLT_Node *__maximum(const struct SPLT *tree,
+                                          const struct SPLT_Node *x)
 {
     while (x->right != NULL)
         x = x->right;
@@ -56,7 +59,8 @@ struct SPLT_Node *SPLT_Maximum(const struct SPLT *tree)
 }
 
 static inline struct SPLT_Node *__search(const struct SPLT *tree,
-    const struct SPLT_Node *x, const struct SPLT_Node *k)
+                                         const struct SPLT_Node *x,
+                                         const struct SPLT_Node *k)
 {
     while (x != NULL) {
         int diff = __compare(tree, k, x);
@@ -69,8 +73,8 @@ static inline struct SPLT_Node *__search(const struct SPLT *tree,
     return (struct SPLT_Node *)x;
 }
 
-struct SPLT_Node *SPLT_Search(
-    const struct SPLT *tree, const struct SPLT_Node *k)
+struct SPLT_Node *SPLT_Search(const struct SPLT *tree,
+                              const struct SPLT_Node *k)
 {
     struct SPLT_Node *x = __search(tree, tree->root, k);
 
@@ -137,16 +141,16 @@ static inline void __splay(struct SPLT *tree, struct SPLT_Node *x)
                 __rotateRight(tree, x->parent);
             else
                 __rotateLeft(tree, x->parent);
-        } else if (x->parent->left == x
-            && x->parent->parent->left == x->parent) {
+        } else if (x->parent->left == x &&
+                   x->parent->parent->left == x->parent) {
             __rotateRight(tree, x->parent->parent);
             __rotateRight(tree, x->parent);
-        } else if (x->parent->right == x
-            && x->parent->parent->right == x->parent) {
+        } else if (x->parent->right == x &&
+                   x->parent->parent->right == x->parent) {
             __rotateLeft(tree, x->parent->parent);
             __rotateLeft(tree, x->parent);
-        } else if (x->parent->left == x
-            && x->parent->parent->right == x->parent) {
+        } else if (x->parent->left == x &&
+                   x->parent->parent->right == x->parent) {
             __rotateRight(tree, x->parent);
             __rotateLeft(tree, x->parent);
         } else {
@@ -192,8 +196,8 @@ void SPLT_Insert(struct SPLT *tree, struct SPLT_Node *z)
         tree->root->parent = NULL;
 }
 
-static inline void __transplant(
-    struct SPLT *tree, struct SPLT_Node *u, struct SPLT_Node *v)
+static inline void __transplant(struct SPLT *tree, struct SPLT_Node *u,
+                                struct SPLT_Node *v)
 {
     if (u->parent == NULL)
         tree->root = v;
@@ -240,8 +244,8 @@ void SPLT_Remove(struct SPLT *tree, struct SPLT_Node *z)
         tree->root->parent = NULL;
 }
 
-static inline struct SPLT_Node *__next(
-    const struct SPLT *tree, struct SPLT_Node *x)
+static inline struct SPLT_Node *__next(const struct SPLT *tree,
+                                       struct SPLT_Node *x)
 {
     struct SPLT_Node *parent;
 
@@ -262,8 +266,8 @@ static inline struct SPLT_Node *__next(
     return parent;
 }
 
-static inline struct SPLT_Node *__prev(
-    const struct SPLT *tree, struct SPLT_Node *x)
+static inline struct SPLT_Node *__prev(const struct SPLT *tree,
+                                       struct SPLT_Node *x)
 {
     struct SPLT_Node *parent;
 
@@ -284,8 +288,8 @@ static inline struct SPLT_Node *__prev(
     return parent;
 }
 
-void SPLT_Forward(
-    struct SPLT *tree, void (*Call)(struct SPLT_Node *, void *), void *private)
+void SPLT_Forward(struct SPLT *tree, void (*Call)(struct SPLT_Node *, void *),
+                  void *private)
 {
     struct SPLT_Node *x = __minimum(tree, tree->root);
 
@@ -295,8 +299,8 @@ void SPLT_Forward(
     }
 }
 
-void SPLT_Backward(
-    struct SPLT *tree, void (*Call)(struct SPLT_Node *, void *), void *private)
+void SPLT_Backward(struct SPLT *tree, void (*Call)(struct SPLT_Node *, void *),
+                   void *private)
 {
     struct SPLT_Node *x = __maximum(tree, tree->root);
 
@@ -307,7 +311,8 @@ void SPLT_Backward(
 }
 
 static void __forEachPreorder(const struct SPLT *tree, struct SPLT_Node *x,
-    void (*Call)(struct SPLT_Node *, void *), void *private)
+                              void (*Call)(struct SPLT_Node *, void *),
+                              void *private)
 {
     if (x == NULL)
         return;
@@ -317,14 +322,15 @@ static void __forEachPreorder(const struct SPLT *tree, struct SPLT_Node *x,
     __forEachPreorder(tree, x->right, Call, private);
 }
 
-void SPLT_Preorder(
-    struct SPLT *tree, void (*Call)(struct SPLT_Node *, void *), void *private)
+void SPLT_Preorder(struct SPLT *tree, void (*Call)(struct SPLT_Node *, void *),
+                   void *private)
 {
     __forEachPreorder(tree, tree->root, Call, private);
 }
 
 static void __forEachInorder(const struct SPLT *tree, struct SPLT_Node *x,
-    void (*Call)(struct SPLT_Node *, void *), void *private)
+                             void (*Call)(struct SPLT_Node *, void *),
+                             void *private)
 {
     if (x == NULL)
         return;
@@ -334,14 +340,15 @@ static void __forEachInorder(const struct SPLT *tree, struct SPLT_Node *x,
     __forEachInorder(tree, x->right, Call, private);
 }
 
-void SPLT_Inorder(
-    struct SPLT *tree, void (*Call)(struct SPLT_Node *, void *), void *private)
+void SPLT_Inorder(struct SPLT *tree, void (*Call)(struct SPLT_Node *, void *),
+                  void *private)
 {
     __forEachInorder(tree, tree->root, Call, private);
 }
 
 static void __forEachPostorder(const struct SPLT *tree, struct SPLT_Node *x,
-    void (*Call)(struct SPLT_Node *, void *), void *private)
+                               void (*Call)(struct SPLT_Node *, void *),
+                               void *private)
 {
     if (x == NULL)
         return;
@@ -351,8 +358,8 @@ static void __forEachPostorder(const struct SPLT *tree, struct SPLT_Node *x,
     Call(x, private);
 }
 
-void SPLT_Postorder(
-    struct SPLT *tree, void (*Call)(struct SPLT_Node *, void *), void *private)
+void SPLT_Postorder(struct SPLT *tree, void (*Call)(struct SPLT_Node *, void *),
+                    void *private)
 {
     __forEachPostorder(tree, tree->root, Call, private);
 }

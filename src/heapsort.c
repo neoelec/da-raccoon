@@ -8,7 +8,7 @@
 #include "common.h"
 
 static void __heapify(void *base, size_t k, size_t r, size_t size,
-    int (*Compare)(const void *, const void *))
+                      int (*Compare)(const void *, const void *))
 {
     size_t left = 2 * k + 1;
     size_t right = 2 * k + 2;
@@ -31,7 +31,7 @@ static void __heapify(void *base, size_t k, size_t r, size_t size,
 }
 
 static inline void __buildHeap(void *base, size_t r, size_t size,
-    int (*Compare)(const void *, const void *))
+                               int (*Compare)(const void *, const void *))
 {
     ssize_t i;
 
@@ -40,7 +40,7 @@ static inline void __buildHeap(void *base, size_t r, size_t size,
 }
 
 void HeapSort(void *base, size_t nmemb, size_t size,
-    int (*Compare)(const void *, const void *))
+              int (*Compare)(const void *, const void *))
 {
     size_t i;
 

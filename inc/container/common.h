@@ -7,7 +7,7 @@
 #include <stddef.h>
 
 #ifndef CONTAINER_OF
-#define CONTAINER_OF(ptr, type, member)                                        \
+#define CONTAINER_OF(ptr, type, member) \
     ((type *)(((char *)ptr) - offsetof(type, member)))
 #endif
 

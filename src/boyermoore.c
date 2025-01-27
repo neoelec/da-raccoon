@@ -9,8 +9,8 @@
 
 #define ALPHABET_LEN 256
 
-static inline void __buildBCT(
-    const char *pattern, ssize_t pattern_len, ssize_t *BCT)
+static inline void __buildBCT(const char *pattern, ssize_t pattern_len,
+                              ssize_t *BCT)
 {
     ssize_t i, j;
 
@@ -21,8 +21,8 @@ static inline void __buildBCT(
         BCT[(size_t)pattern[j]] = j;
 }
 
-static inline void __buildGST(
-    const char *pattern, ssize_t pattern_len, ssize_t *suffix, ssize_t *GST)
+static inline void __buildGST(const char *pattern, ssize_t pattern_len,
+                              ssize_t *suffix, ssize_t *GST)
 {
     /* Case 1 */
     ssize_t i = pattern_len;
@@ -57,7 +57,7 @@ static inline void __buildGST(
 }
 
 ssize_t BoyerMoore(const char *text, size_t text_len, size_t start,
-    const char *pattern, size_t pattern_len)
+                   const char *pattern, size_t pattern_len)
 {
     ssize_t BCT[ALPHABET_LEN];
     ssize_t *suffix = calloc(pattern_len + 1, sizeof(*suffix));

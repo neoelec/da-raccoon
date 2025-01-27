@@ -5,8 +5,8 @@
 
 #include <algorithm/knuthmorrispratt.h>
 
-static inline void __preprocess(
-    const char *pattern, ssize_t pattern_len, ssize_t *border)
+static inline void __preprocess(const char *pattern, ssize_t pattern_len,
+                                ssize_t *border)
 {
     ssize_t i = 0;
     ssize_t j = -1;
@@ -25,7 +25,7 @@ static inline void __preprocess(
 }
 
 ssize_t KnuthMorrisPratt(const char *text, size_t text_len, size_t start,
-    const char *pattern, size_t pattern_len)
+                         const char *pattern, size_t pattern_len)
 {
     ssize_t i = start;
     ssize_t j = 0;

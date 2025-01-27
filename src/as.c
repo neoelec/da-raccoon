@@ -5,7 +5,10 @@
 
 #include <container/as.h>
 
-static inline size_t __count(const struct AS *stack) { return stack->top + 1; }
+static inline size_t __count(const struct AS *stack)
+{
+    return stack->top + 1;
+}
 
 static inline bool __isEmpty(const struct AS *stack)
 {
@@ -43,11 +46,20 @@ void *AS_Top(const struct AS *stack)
     return __isEmpty(stack) ? NULL : stack->entry[stack->top];
 }
 
-size_t AS_Count(const struct AS *stack) { return __count(stack); }
+size_t AS_Count(const struct AS *stack)
+{
+    return __count(stack);
+}
 
-bool AS_IsEmpty(const struct AS *stack) { return __isEmpty(stack); }
+bool AS_IsEmpty(const struct AS *stack)
+{
+    return __isEmpty(stack);
+}
 
-bool AS_IsFull(const struct AS *stack) { return __isFull(stack); }
+bool AS_IsFull(const struct AS *stack)
+{
+    return __isFull(stack);
+}
 
 void AS_Forward(struct AS *stack, void (*Call)(void *, void *), void *private)
 {

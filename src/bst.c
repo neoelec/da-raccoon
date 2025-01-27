@@ -8,7 +8,7 @@
 #define __compare(tree, a, b) (tree)->Compare(a, b)
 
 void BST_Init(struct BST *tree,
-    int (*Compare)(const struct BST_Node *, const struct BST_Node *))
+              int (*Compare)(const struct BST_Node *, const struct BST_Node *))
 {
     tree->root = NULL;
     tree->Compare = Compare;
@@ -19,7 +19,10 @@ static inline bool __isEmpty(const struct BST *tree)
     return (tree->root == NULL) ? true : false;
 }
 
-bool BST_IsEmpty(const struct BST *tree) { return __isEmpty(tree); }
+bool BST_IsEmpty(const struct BST *tree)
+{
+    return __isEmpty(tree);
+}
 
 static inline struct BST_Node *__minimum(const struct BST_Node *x)
 {
@@ -53,8 +56,8 @@ struct BST_Node *BST_Maximum(const struct BST *tree)
     return __maximum(tree->root);
 }
 
-static struct BST_Node *__search(
-    const struct BST *tree, struct BST_Node *x, const struct BST_Node *k)
+static struct BST_Node *__search(const struct BST *tree, struct BST_Node *x,
+                                 const struct BST_Node *k)
 {
     while (x != NULL) {
         int diff = __compare(tree, k, x);
@@ -67,8 +70,7 @@ static struct BST_Node *__search(
     return x;
 }
 
-struct BST_Node *BST_Search(
-    const struct BST *tree, const struct BST_Node *k)
+struct BST_Node *BST_Search(const struct BST *tree, const struct BST_Node *k)
 {
     return __search(tree, tree->root, k);
 }
@@ -107,8 +109,8 @@ void BST_Insert(struct BST *tree, struct BST_Node *z)
         tree->root->parent = NULL;
 }
 
-static void __transplant(
-    struct BST *tree, struct BST_Node *u, struct BST_Node *v)
+static void __transplant(struct BST *tree, struct BST_Node *u,
+                         struct BST_Node *v)
 {
     if (u->parent == NULL)
         tree->root = v;
@@ -152,8 +154,8 @@ void BST_Remove(struct BST *tree, struct BST_Node *z)
         tree->root->parent = NULL;
 }
 
-static inline struct BST_Node *__next(
-    const struct BST *tree, struct BST_Node *x)
+static inline struct BST_Node *__next(const struct BST *tree,
+                                      struct BST_Node *x)
 {
     struct BST_Node *parent;
 
@@ -174,8 +176,8 @@ static inline struct BST_Node *__next(
     return parent;
 }
 
-static inline struct BST_Node *__prev(
-    const struct BST *tree, struct BST_Node *x)
+static inline struct BST_Node *__prev(const struct BST *tree,
+                                      struct BST_Node *x)
 {
     struct BST_Node *parent;
 
@@ -196,8 +198,8 @@ static inline struct BST_Node *__prev(
     return parent;
 }
 
-void BST_Forward(
-    struct BST *tree, void (*Call)(struct BST_Node *, void *), void *private)
+void BST_Forward(struct BST *tree, void (*Call)(struct BST_Node *, void *),
+                 void *private)
 {
     struct BST_Node *x = __minimum(tree->root);
 
@@ -207,8 +209,8 @@ void BST_Forward(
     }
 }
 
-void BST_Backward(
-    struct BST *tree, void (*Call)(struct BST_Node *, void *), void *private)
+void BST_Backward(struct BST *tree, void (*Call)(struct BST_Node *, void *),
+                  void *private)
 {
     struct BST_Node *x = __maximum(tree->root);
 
@@ -219,7 +221,8 @@ void BST_Backward(
 }
 
 static void __forEachPreorder(struct BST_Node *node,
-    void (*Call)(struct BST_Node *, void *), void *private)
+                              void (*Call)(struct BST_Node *, void *),
+                              void *private)
 {
     if (node == NULL)
         return;
@@ -229,14 +232,15 @@ static void __forEachPreorder(struct BST_Node *node,
     __forEachPreorder(node->right, Call, private);
 }
 
-void BST_Preorder(
-    struct BST *tree, void (*Call)(struct BST_Node *, void *), void *private)
+void BST_Preorder(struct BST *tree, void (*Call)(struct BST_Node *, void *),
+                  void *private)
 {
     __forEachPreorder(tree->root, Call, private);
 }
 
 static void __forEachInorder(struct BST_Node *node,
-    void (*Call)(struct BST_Node *, void *), void *private)
+                             void (*Call)(struct BST_Node *, void *),
+                             void *private)
 {
     if (node == NULL)
         return;
@@ -246,14 +250,15 @@ static void __forEachInorder(struct BST_Node *node,
     __forEachInorder(node->right, Call, private);
 }
 
-void BST_Inorder(
-    struct BST *tree, void (*Call)(struct BST_Node *, void *), void *private)
+void BST_Inorder(struct BST *tree, void (*Call)(struct BST_Node *, void *),
+                 void *private)
 {
     __forEachInorder(tree->root, Call, private);
 }
 
 static void __forEachPostorder(struct BST_Node *node,
-    void (*Call)(struct BST_Node *, void *), void *private)
+                               void (*Call)(struct BST_Node *, void *),
+                               void *private)
 {
     if (node == NULL)
         return;
@@ -263,8 +268,8 @@ static void __forEachPostorder(struct BST_Node *node,
     Call(node, private);
 }
 
-void BST_Postorder(
-    struct BST *tree, void (*Call)(struct BST_Node *, void *), void *private)
+void BST_Postorder(struct BST *tree, void (*Call)(struct BST_Node *, void *),
+                   void *private)
 {
     __forEachPostorder(tree->root, Call, private);
 }

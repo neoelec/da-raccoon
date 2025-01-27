@@ -30,25 +30,28 @@ struct RBT {
 extern "C" {
 #endif
 
-extern void RBT_Init(struct RBT *tree,
-    int (*Compare)(const struct RBT_Node *, const struct RBT_Node *));
+extern void RBT_Init(struct RBT *tree, int (*Compare)(const struct RBT_Node *,
+                                                      const struct RBT_Node *));
 extern bool RBT_IsEmpty(const struct RBT *tree);
 extern struct RBT_Node *RBT_Minimum(const struct RBT *tree);
 extern struct RBT_Node *RBT_Maximum(const struct RBT *tree);
-extern struct RBT_Node *RBT_Search(
-    const struct RBT *tree, const struct RBT_Node *k);
+extern struct RBT_Node *RBT_Search(const struct RBT *tree,
+                                   const struct RBT_Node *k);
 extern void RBT_Insert(struct RBT *tree, struct RBT_Node *x);
 extern void RBT_Remove(struct RBT *tree, struct RBT_Node *x);
-extern void RBT_Forward(
-    struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private);
-extern void RBT_Backward(
-    struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private);
-extern void RBT_Preorder(
-    struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private);
-extern void RBT_Inorder(
-    struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private);
-extern void RBT_Postorder(
-    struct RBT *tree, void (*Call)(struct RBT_Node *, void *), void *private);
+extern void RBT_Forward(struct RBT *tree,
+                        void (*Call)(struct RBT_Node *, void *), void *private);
+extern void RBT_Backward(struct RBT *tree,
+                         void (*Call)(struct RBT_Node *, void *),
+                         void *private);
+extern void RBT_Preorder(struct RBT *tree,
+                         void (*Call)(struct RBT_Node *, void *),
+                         void *private);
+extern void RBT_Inorder(struct RBT *tree,
+                        void (*Call)(struct RBT_Node *, void *), void *private);
+extern void RBT_Postorder(struct RBT *tree,
+                          void (*Call)(struct RBT_Node *, void *),
+                          void *private);
 
 #ifdef __cplusplus
 }

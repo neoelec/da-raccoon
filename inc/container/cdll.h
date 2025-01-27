@@ -22,10 +22,12 @@ extern void CDLL_InsertTail(struct CDLL *list, struct DLL_Node *node);
 extern void CDLL_Remove(struct CDLL *list, struct DLL_Node *node);
 extern size_t CDLL_Count(const struct CDLL *list);
 extern struct DLL_Node *CDLL_GetNode(const struct CDLL *list, ssize_t n);
-extern void CDLL_Forward(
-    struct CDLL *list, void (*Call)(struct DLL_Node *, void *), void *private);
-extern void CDLL_Backward(
-    struct CDLL *list, void (*Call)(struct DLL_Node *, void *), void *private);
+extern void CDLL_Forward(struct CDLL *list,
+                         void (*Call)(struct DLL_Node *, void *),
+                         void *private);
+extern void CDLL_Backward(struct CDLL *list,
+                          void (*Call)(struct DLL_Node *, void *),
+                          void *private);
 
 #ifdef __cplusplus
 }
@@ -36,8 +38,8 @@ static inline void CDLL_InsertAfter(struct DLL_Node *pos, struct DLL_Node *node)
     DLL_InsertAfter(pos, node);
 }
 
-static inline void CDLL_InsertBefore(
-    struct DLL_Node *pos, struct DLL_Node *node)
+static inline void CDLL_InsertBefore(struct DLL_Node *pos,
+                                     struct DLL_Node *node)
 {
     DLL_InsertBefore(pos, node);
 }

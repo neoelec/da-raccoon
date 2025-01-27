@@ -5,7 +5,10 @@
 
 #include <container/sll.h>
 
-void SLL_Init(struct SLL_Node *head) { head->next = NULL; }
+void SLL_Init(struct SLL_Node *head)
+{
+    head->next = NULL;
+}
 
 void SLL_InsertTail(struct SLL_Node *head, struct SLL_Node *node)
 {
@@ -62,7 +65,7 @@ struct SLL_Node *SLL_GetNode(const struct SLL_Node *head, ssize_t n)
 }
 
 void SLL_Forward(struct SLL_Node *head, void (*Call)(struct SLL_Node *, void *),
-    void *private)
+                 void *private)
 {
     struct SLL_Node *node = head->next;
 

@@ -17,7 +17,7 @@ struct CQ {
     void *entry[0];
 };
 
-#define CQ_BYTES(nr_entries)                                                   \
+#define CQ_BYTES(nr_entries) \
     (sizeof(struct CQ) + (nr_entries) * (sizeof(void *)))
 
 #ifdef __cplusplus
@@ -32,8 +32,8 @@ extern bool CQ_IsEmpty(const struct CQ *queue);
 extern bool CQ_IsFull(const struct CQ *queue);
 extern void *CQ_Front(const struct CQ *queue);
 extern void *CQ_Rear(const struct CQ *queue);
-extern void CQ_Forward(
-    struct CQ *queue, void (*Call)(void *, void *), void *private);
+extern void CQ_Forward(struct CQ *queue, void (*Call)(void *, void *),
+                       void *private);
 
 #ifdef __cplusplus
 }

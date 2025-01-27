@@ -9,8 +9,8 @@
 #include "common.h"
 
 static void __merge(uint8_t *base, size_t size,
-    int (*Compare)(const void *, const void *), ssize_t start, ssize_t middle,
-    ssize_t end)
+                    int (*Compare)(const void *, const void *), ssize_t start,
+                    ssize_t middle, ssize_t end)
 {
     ssize_t left = start;
     ssize_t right = middle + 1;
@@ -30,12 +30,12 @@ static void __merge(uint8_t *base, size_t size,
     }
 
     if (left <= middle)
-        memcpy(
-            &dest[idx * size], &base[left * size], (middle - left + 1) * size);
+        memcpy(&dest[idx * size], &base[left * size],
+               (middle - left + 1) * size);
 
     if (right <= end)
-        memcpy(
-            &dest[idx * size], &base[right * size], (end - right + 1) * size);
+        memcpy(&dest[idx * size], &base[right * size],
+               (end - right + 1) * size);
 
     memcpy(&base[start * size], dest, (end - start + 1) * size);
 
@@ -43,7 +43,8 @@ static void __merge(uint8_t *base, size_t size,
 }
 
 static void __mergeSort(uint8_t *base, size_t size,
-    int (*Compare)(const void *, const void *), ssize_t start, ssize_t end)
+                        int (*Compare)(const void *, const void *),
+                        ssize_t start, ssize_t end)
 {
     ssize_t middle;
 
@@ -59,7 +60,7 @@ static void __mergeSort(uint8_t *base, size_t size,
 }
 
 void MergeSort(void *base, size_t nmemb, size_t size,
-    int (*Compare)(const void *, const void *))
+               int (*Compare)(const void *, const void *))
 {
     __mergeSort((uint8_t *)base, size, Compare, 0, nmemb - 1);
 }

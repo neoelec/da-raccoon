@@ -27,25 +27,28 @@ struct AVL {
 extern "C" {
 #endif
 
-extern void AVL_Init(struct AVL *tree,
-    int (*Compare)(const struct AVL_Node *, const struct AVL_Node *));
+extern void AVL_Init(struct AVL *tree, int (*Compare)(const struct AVL_Node *,
+                                                      const struct AVL_Node *));
 extern bool AVL_IsEmpty(const struct AVL *tree);
 extern struct AVL_Node *AVL_Minimum(const struct AVL *tree);
 extern struct AVL_Node *AVL_Maximum(const struct AVL *tree);
-extern struct AVL_Node *AVL_Search(
-    const struct AVL *tree, const struct AVL_Node *k);
+extern struct AVL_Node *AVL_Search(const struct AVL *tree,
+                                   const struct AVL_Node *k);
 extern void AVL_Insert(struct AVL *tree, struct AVL_Node *x);
 extern void AVL_Remove(struct AVL *tree, struct AVL_Node *x);
-extern void AVL_Forward(
-    struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private);
-extern void AVL_Backward(
-    struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private);
-extern void AVL_Preorder(
-    struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private);
-extern void AVL_Inorder(
-    struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private);
-extern void AVL_Postorder(
-    struct AVL *tree, void (*Call)(struct AVL_Node *, void *), void *private);
+extern void AVL_Forward(struct AVL *tree,
+                        void (*Call)(struct AVL_Node *, void *), void *private);
+extern void AVL_Backward(struct AVL *tree,
+                         void (*Call)(struct AVL_Node *, void *),
+                         void *private);
+extern void AVL_Preorder(struct AVL *tree,
+                         void (*Call)(struct AVL_Node *, void *),
+                         void *private);
+extern void AVL_Inorder(struct AVL *tree,
+                        void (*Call)(struct AVL_Node *, void *), void *private);
+extern void AVL_Postorder(struct AVL *tree,
+                          void (*Call)(struct AVL_Node *, void *),
+                          void *private);
 
 #ifdef __cplusplus
 }

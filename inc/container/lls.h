@@ -25,8 +25,8 @@ extern struct SLL_Node *LLS_Pop(struct LLS *stack);
 extern struct SLL_Node *LLS_Top(const struct LLS *stack);
 extern size_t LLS_Count(const struct LLS *stack);
 extern bool LLS_IsEmpty(const struct LLS *stack);
-extern void LLS_Forward(
-    struct LLS *stack, void (*Call)(struct SLL_Node *, void *), void *private);
+extern void LLS_Forward(struct LLS *stack,
+                        void (*Call)(struct SLL_Node *, void *), void *private);
 
 #ifdef __cplusplus
 }

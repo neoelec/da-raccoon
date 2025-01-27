@@ -5,7 +5,10 @@
 
 #include <container/sbt.h>
 
-void SBT_Init(struct SBT *tree) { tree->root = NULL; }
+void SBT_Init(struct SBT *tree)
+{
+    tree->root = NULL;
+}
 
 void SBT_InitNode(struct SBT_Node *node)
 {
@@ -14,7 +17,8 @@ void SBT_InitNode(struct SBT_Node *node)
 }
 
 static void __forEachPreorder(struct SBT_Node *node,
-    void (*Call)(struct SBT_Node *, void *), void *private)
+                              void (*Call)(struct SBT_Node *, void *),
+                              void *private)
 {
     if (node == NULL)
         return;
@@ -24,14 +28,15 @@ static void __forEachPreorder(struct SBT_Node *node,
     __forEachPreorder(node->right, Call, private);
 }
 
-void SBT_Preorder(
-    struct SBT *tree, void (*Call)(struct SBT_Node *, void *), void *private)
+void SBT_Preorder(struct SBT *tree, void (*Call)(struct SBT_Node *, void *),
+                  void *private)
 {
     __forEachPreorder(tree->root, Call, private);
 }
 
 static void __forEachInorder(struct SBT_Node *node,
-    void (*Call)(struct SBT_Node *, void *), void *private)
+                             void (*Call)(struct SBT_Node *, void *),
+                             void *private)
 {
     if (node == NULL)
         return;
@@ -41,14 +46,15 @@ static void __forEachInorder(struct SBT_Node *node,
     __forEachInorder(node->right, Call, private);
 }
 
-void SBT_Inorder(
-    struct SBT *tree, void (*Call)(struct SBT_Node *, void *), void *private)
+void SBT_Inorder(struct SBT *tree, void (*Call)(struct SBT_Node *, void *),
+                 void *private)
 {
     __forEachInorder(tree->root, Call, private);
 }
 
 static void __forEachPostorder(struct SBT_Node *node,
-    void (*Call)(struct SBT_Node *, void *), void *private)
+                               void (*Call)(struct SBT_Node *, void *),
+                               void *private)
 {
     if (node == NULL)
         return;
@@ -58,8 +64,8 @@ static void __forEachPostorder(struct SBT_Node *node,
     Call(node, private);
 }
 
-void SBT_Postorder(
-    struct SBT *tree, void (*Call)(struct SBT_Node *, void *), void *private)
+void SBT_Postorder(struct SBT *tree, void (*Call)(struct SBT_Node *, void *),
+                   void *private)
 {
     __forEachPostorder(tree->root, Call, private);
 }

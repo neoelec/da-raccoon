@@ -4,7 +4,7 @@
 #include <container/cht.h>
 
 void CHT_Init(struct CHT *table, size_t nr_buckets,
-    size_t (*KeyHash)(const struct CHT *, const struct DLL_Node *))
+              size_t (*KeyHash)(const struct CHT *, const struct DLL_Node *))
 {
     struct DLL_Node *bucket = table->bucket;
     size_t i;
@@ -27,10 +27,13 @@ void CHT_Insert(struct CHT *table, struct DLL_Node *node)
     DLL_InsertTail(head, node);
 }
 
-void CHT_Remove(struct CHT *table, struct DLL_Node *node) { DLL_Remove(node); }
+void CHT_Remove(struct CHT *table, struct DLL_Node *node)
+{
+    DLL_Remove(node);
+}
 
-static struct DLL_Node *__getHead(
-    struct CHT *table, const struct DLL_Node *key_node)
+static struct DLL_Node *__getHead(struct CHT *table,
+                                  const struct DLL_Node *key_node)
 {
     size_t hash;
 
@@ -42,7 +45,8 @@ static struct DLL_Node *__getHead(
 }
 
 struct DLL_Node *CHT_Get(struct CHT *table, const struct DLL_Node *key_node,
-    int (*Compare)(const struct DLL_Node *, const struct DLL_Node *))
+                         int (*Compare)(const struct DLL_Node *,
+                                        const struct DLL_Node *))
 {
     struct DLL_Node *head = __getHead(table, key_node);
     struct DLL_Node *node;
@@ -58,8 +62,8 @@ struct DLL_Node *CHT_Get(struct CHT *table, const struct DLL_Node *key_node,
     return NULL;
 }
 
-void CHT_Traverse(
-    struct CHT *table, void (*Call)(struct DLL_Node *, void *), void *private)
+void CHT_Traverse(struct CHT *table, void (*Call)(struct DLL_Node *, void *),
+                  void *private)
 {
     size_t i;
 
