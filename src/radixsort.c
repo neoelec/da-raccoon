@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: GPL-2.0+
-// Copyright (c) 2024 YOUNGJIN JOO (neoelec@gmail.com)
+// Copyright (c) 2024-2025 YOUNGJIN JOO (neoelec@gmail.com)
 
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+
+#include "common.h"
 
 static inline unsigned long long __maskULL(size_t size)
 {
@@ -14,8 +16,7 @@ static inline unsigned long long __maskULL(size_t size)
     return (~ull) >> ((sizeof(ull) - (unsigned long long)size) * 8);
 }
 
-static inline unsigned long long __getMax(uint8_t *base, size_t nmemb,
-                                          size_t size)
+static inline unsigned long long __getMax(void *base, size_t nmemb, size_t size)
 {
     unsigned long long mask_ull = __maskULL(size);
     unsigned long long max = 0;
@@ -23,24 +24,25 @@ static inline unsigned long long __getMax(uint8_t *base, size_t nmemb,
     size_t i;
 
     for (i = 0; i < nmemb / size; i++) {
-        tmp = *(unsigned long long *)&base[i * size] & mask_ull;
+        tmp = *(unsigned long long *)BASE(base, i, size) & mask_ull;
         max = max > tmp ? max : tmp;
     }
 
     return max;
 }
 
-static inline unsigned long long __toIdx(uint8_t *base, ssize_t i, size_t size,
+static inline unsigned long long __toIdx(void *base, ssize_t i, size_t size,
                                          unsigned long long shift,
                                          unsigned long long mask_radix,
                                          unsigned long long mask_ull)
 {
-    unsigned long long tmp = *(unsigned long long *)&base[i * size] & mask_ull;
+    unsigned long long tmp = *(unsigned long long *)BASE(base, i, size) &
+                             mask_ull;
 
     return (tmp >> shift) & mask_radix;
 }
 
-static inline void __countSort(uint8_t *base, size_t nmemb, size_t size,
+static inline void __countSort(void *base, size_t nmemb, size_t size,
                                unsigned long long shift,
                                unsigned long long order,
                                unsigned long long *output,
@@ -63,16 +65,16 @@ static inline void __countSort(uint8_t *base, size_t nmemb, size_t size,
 
     for (i = nmemb - 1; i >= 0; i--) {
         idx = __toIdx(base, i, size, shift, mask_radix, mask_ull);
-        output[count[idx] - 1] = *(unsigned long long *)&base[i * size] &
+        output[count[idx] - 1] = *(unsigned long long *)BASE(base, i, size) &
                                  mask_ull;
         count[idx]--;
     }
 
     for (i = 0; i < nmemb; i++)
-        memcpy(&base[i * size], &output[i], size);
+        memcpy(BASE(base, i, size), &output[i], size);
 }
 
-static inline void __radixSort(uint8_t *base, size_t nmemb, size_t size,
+static inline void __radixSort(void *base, size_t nmemb, size_t size,
                                unsigned long long order)
 {
     unsigned long long max = __getMax(base, nmemb, size);

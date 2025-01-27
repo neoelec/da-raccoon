@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0+
-// Copyright (c) 2024 YOUNGJIN JOO (neoelec@gmail.com)
+// Copyright (c) 2024-2025 YOUNGJIN JOO (neoelec@gmail.com)
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -8,7 +8,9 @@
 
 #include <algorithm/shellsort.h>
 
-static inline void __intervalSort(uint8_t *base, size_t size, ssize_t begin,
+#include "common.h"
+
+static inline void __intervalSort(void *base, size_t size, ssize_t begin,
                                   ssize_t end, ssize_t intv,
                                   int (*Compare)(const void *, const void *))
 {
@@ -19,18 +21,18 @@ static inline void __intervalSort(uint8_t *base, size_t size, ssize_t begin,
     for (i = begin + intv; i <= end; i = i + intv) {
         ssize_t j;
 
-        memcpy(new_item, &base[i * size], size);
+        memcpy(new_item, BASE(base, i, size), size);
 
         j = i - intv;
         while (j >= begin) {
-            if (Compare(new_item, &base[j * size]) >= 0)
+            if (Compare(new_item, BASE(base, j, size)) >= 0)
                 break;
 
-            memcpy(&base[(j + intv) * size], &base[j * size], size);
+            memcpy(BASE(base, j + intv, size), BASE(base, j, size), size);
             j -= intv;
         }
 
-        memcpy(&base[(j + intv) * size], new_item, size);
+        memcpy(BASE(base, j + intv, size), new_item, size);
     }
 
     if (size > sizeof(tmp_static))

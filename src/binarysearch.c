@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0+
-// Copyright (c) 2024 YOUNGJIN JOO (neoelec@gmail.com)
+// Copyright (c) 2024-2025 YOUNGJIN JOO (neoelec@gmail.com)
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -7,9 +7,10 @@
 
 #include <algorithm/binarysearch.h>
 
-static inline void *__binarySearch(const void *key, const uint8_t *base,
-                                   size_t nmemb, size_t size,
-                                   int (*Compare)(const void *, const void *))
+#include "common.h"
+
+void *BinarySearch(const void *key, const void *base, size_t nmemb, size_t size,
+                   int (*Compare)(const void *, const void *))
 {
     ssize_t left, right;
 
@@ -18,10 +19,10 @@ static inline void *__binarySearch(const void *key, const uint8_t *base,
 
     while (left <= right) {
         ssize_t mid = (left + right) / 2;
-        int diff = Compare(key, &base[mid * size]);
+        int diff = Compare(key, BASE(base, mid, size));
 
         if (diff == 0)
-            return (void *)&base[mid * size];
+            return (void *)BASE(base, mid, size);
         else if (diff > 0)
             left = mid + 1;
         else
@@ -29,10 +30,4 @@ static inline void *__binarySearch(const void *key, const uint8_t *base,
     }
 
     return NULL;
-}
-
-void *BinarySearch(const void *key, const void *base, size_t nmemb, size_t size,
-                   int (*Compare)(const void *, const void *))
-{
-    return __binarySearch(key, (const uint8_t *)base, nmemb, size, Compare);
 }
